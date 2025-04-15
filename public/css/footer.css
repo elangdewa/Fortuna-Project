@@ -1,0 +1,24 @@
+.footer {
+    background: #011936;
+    color: #011936;
+}
+
+.footer-logo {
+    width: 150px; /* Sesuaikan ukuran logo */
+}
+
+.footer-menu a {
+    font-weight: 500;
+}
+
+.footer-menu a:hover {
+    text-decoration: underline;
+}
+
+.social-icons a {
+    transition: 0.3s;
+}
+
+.social-icons a:hover {
+    color: #ccc;
+}
