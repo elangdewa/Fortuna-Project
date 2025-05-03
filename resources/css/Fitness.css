@@ -1,0 +1,177 @@
+/* Logo */
+.logo {
+    height: 50px;
+    width: auto;
+}
+
+.custom-header {
+    background-color: #011936 ;
+}
+
+.nav-auth .nav-link.btn:hover {
+    background-color: #FDB833 !important;
+    color: #10375C !important;
+}
+/* Navigasi Tengah */
+.nav-center {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* Login & Register ke kanan */
+.nav-auth {
+    margin-left: auto;
+
+}
+
+/* Style Navbar */
+.nav-link {
+    font-size: 16px;
+    font-weight: 500;
+    padding: 8px 15px;
+}
+
+/* Button Register */
+.nav-auth .btn-success {
+    border-radius: 20px;
+    padding: 6px 18px;
+    font-weight: 600;
+}
+
+/* Tombol Menu Mobile */
+.navbar-toggler {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+/* Menu mobile (default: hidden) */
+.mobile-menu {
+    display: none;
+    background-color: #011936;
+    padding: 10px 0;
+    text-align: center;
+}
+
+/* Responsif */
+@media (max-width: 992px) {
+    /* Navbar berubah ke tampilan mobile */
+    .container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    /* Navigasi & Auth sembunyi di layar kecil */
+    .nav-center, .nav-auth {
+        display: none !important;
+    }
+
+    /* Tombol menu mobile muncul */
+    .navbar-toggler {
+        display: block;
+    }
+}
+
+/* Menu aktif ketika tombol ditekan */
+.mobile-menu.active {
+    display: block;
+}
+
+/* Background Image */
+.bg-home {
+    background-image: url('../images/Halfitness.jpg'); /* Sesuaikan path */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 100%; /* Kurangi lebar agar ada jeda kanan kiri */
+    max-width: 1200px; /* Batasi agar tidak terlalu besar di layar lebar */
+    height: 80vh; /* Kurangi tinggi agar ada jeda atas bawah */
+    max-height: 800px; /* Batasi tinggi maksimal */
+    margin: 4vh auto; /* Beri jeda atas bawah dan tengah otomatis */
+    border-radius: 30px; /* Opsional, buat sudut melengkung */
+}
+
+/* Overlay Gelap Supaya Teks Lebih Terbaca */
+.overlay {
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Background gelap transparan */
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0 10%;
+    border-radius: 30px; /* Opsional, buat sudut melengkung */
+
+}
+
+/* Area Konten */
+.content {
+    max-width: 500px;
+    color: white;
+    text-align: left;
+}
+
+/* Judul */
+h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    line-height: 1.3;
+}
+
+/* Paragraf */
+p {
+    font-size: 1.2rem;
+    margin-top: 10px;
+}
+
+/* Tombol */
+.buttons {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+.btn {
+    padding: 12px 24px;
+    border-radius: 5px;
+    font-weight: bold;
+    text-decoration: none;
+    display: inline-block;
+    transition: 0.3s;
+}
+
+
+/* RESPONSIVE DESIGN */
+@media (max-width: 768px) {  /* Tablet & Mobile */
+    .overlay {
+        justify-content: center; /* Tengahin teks */
+        padding: 0 5%;
+        text-align: center;
+    }
+
+    .content {
+        max-width: 100%;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    p {
+        font-size: 1rem;
+    }
+
+    .buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .btn {
+        width: 100%;
+        text-align: center;
+    }
+}

@@ -1,0 +1,436 @@
+
+/* Logo */
+.logo {
+    height: 40px; /* Sesuaikan tinggi logo agar besar */
+    width: auto; /* Jaga proporsi logo */
+    object-fit: contain; /* Pastikan logo tidak keluar dari batas */
+    display: block; /* Hilangkan extra space bawah gambar */
+}
+
+.custom-header {
+    background-color: #011936 ;
+    height: 80px; /* Sesuaikan tinggi navbar */
+    display: flex;
+    align-items: center;
+}
+
+.nav-auth .nav-link.btn:hover {
+    background-color: #FDB833 !important;
+    color: #10375C !important;
+}
+/* Navigasi Tengah */
+.nav-center {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* Login & Register ke kanan */
+.nav-auth {
+    margin-left: auto;
+}
+
+/* Style Navbar */
+.nav-link {
+    font-size: 16px;
+    font-weight: 500;
+    padding: 8px 15px;
+}
+
+/* Button Register */
+.nav-auth .btn-success {
+    border-radius: 20px;
+    padding: 6px 18px;
+    font-weight: 600;
+}
+
+/* Tombol Menu Mobile */
+.navbar-toggler {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.mobile-menu {
+    visibility: hidden;
+    opacity: 0;
+    position: fixed;
+    top: 10%; /* Muncul di tengah atas */
+    left: 50%;
+    transform: translate(-50%, 0);
+    width: 80%;
+    max-width: 300px;
+    background-color: #011936;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    z-index: 9999;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+}
+
+.mobile-menu.active {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Responsif */
+@media (max-width: 768px) {
+
+    .container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    /* Navigasi & Auth sembunyi di layar kecil */
+    .nav-center, .nav-auth {
+        display: none !important;
+    }
+
+    /* Tombol menu mobile muncul */
+    .navbar-toggler {
+        display: block;
+    }
+    .mobile-menu .nav-link.btn:hover {
+        background-color: #FDB833 !important;
+        color: #10375C !important;
+    }
+
+}
+
+/* Menu aktif ketika tombol ditekan */
+.mobile-menu.active {
+    display: block;
+}
+
+/* Background Image */
+.bg-home {
+    background-image: url('../images/Home.jpg'); /* Sesuaikan path */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 100%; /* Kurangi lebar agar ada jeda kanan kiri */
+    max-width: 1200px; /* Batasi agar tidak terlalu besar di layar lebar */
+    height: 80vh; /* Kurangi tinggi agar ada jeda atas bawah */
+    max-height: 800px; /* Batasi tinggi maksimal */
+    margin: 4vh auto; /* Beri jeda atas bawah dan tengah otomatis */
+    border-radius: 30px; /* Opsional, buat sudut melengkung */
+}
+
+/* Overlay Gelap Supaya Teks Lebih Terbaca */
+.overlay {
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Background gelap transparan */
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0 10%;
+    /* border-radius: 30px; Opsional, buat sudut melengkung */
+
+}
+
+/* Area Konten */
+.content {
+    max-width: 450px;
+    color: white;
+    text-align: left;
+}
+
+/* Judul */
+h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    line-height: 1.3;
+}
+
+/* Paragraf */
+p {
+    font-size: 1.2rem;
+    margin-top: 10px;
+}
+
+/* Tombol */
+.buttons {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+.btn {
+    padding: 12px 24px;
+    border-radius: 5px;
+    font-weight: bold;
+    text-decoration: none;
+    display: inline-block;
+    transition: 0.3s;
+}
+
+
+/* RESPONSIVE DESIGN */
+@media (max-width: 768px) {  /* Tablet & Mobile */
+    .overlay {
+        justify-content: center; /* Tengahin teks */
+        padding: 0 5%;
+        text-align: center;
+    }
+
+    .content {
+        max-width: 100%;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    p {
+        font-size: 1rem;
+    }
+
+    .buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .btn {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+
+/* Section2 */
+/* Efek Highlight pada Judul */
+/* Gaya Heading dengan Highlight */
+.highlighted-text {
+    font-weight: bold;
+    font-size: 1.8rem;
+    position: relative;
+    display: inline-block;
+    line-height: 1.3;
+    text-transform: uppercase;
+    z-index: 0; /* Pastikan tetap di atas */
+}
+
+
+/* Gaya Gambar */
+.custom-img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 15px; /* Membuat sudut melengkung */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Efek bayangan */
+}
+
+/* Responsif untuk layar kecil */
+@media (max-width: 768px) {
+    .highlighted-text {
+        font-size: 1.5rem; /* Ukuran lebih kecil agar tidak hilang */
+        line-height: 1.2;
+    }
+    .highlighted-text::before {
+        height: 8px; /* Kurangi ukuran highlight agar tidak menutupi teks */
+    }
+}
+
+/* Styling Section */
+.about-section {
+    background-color: #011936;
+    padding: 4rem 2rem;
+    text-align: center; /* Membuat semua teks di dalamnya menjadi rata tengah */
+}
+
+/* Teks Membership */
+.about-text {
+    color: white;
+    margin-bottom: 30px;
+}
+
+/* Judul dan Deskripsi */
+.about-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+}
+
+.about-description {
+    font-size: 1.1rem;
+    max-width: 600px;
+    margin: 0 auto; /* Memastikan teks tetap berada di tengah */
+}
+
+/* Layout Gambar Sejajar Vertikal */
+.about-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Setiap Item */
+.about-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.about-item:hover {
+    transform: scale(1.05);
+    transition: transform 0.3s ease;
+}
+
+
+/* Gambar */
+.about-img {
+    width: 100%;
+    max-width: 250px;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Heading */
+.about-heading {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: white;
+    margin-top: 10px;
+}
+
+/* Button */
+.membership-btn {
+    display: inline-block;
+    background-color: #fff;
+    color: #011936;
+    font-size: 1rem;
+    font-weight: bold;
+    padding: 12px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Hover Effect */
+.membership-btn:hover {
+    background-color: #FDB833;
+    color: #011936;
+    transform: translateY(-3px);
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive Fix */
+@media (min-width: 768px) { 
+    .about-content {
+        flex-direction: row; /* Untuk Desktop sejajar horizontal */
+        justify-content: space-around;
+    }
+
+    /* Agar tombol tetap proporsional */
+    .membership-btn {
+        font-size: 1.2rem;
+        padding: 16px 28px;
+    }
+}
+
+@media (max-width: 768px) { 
+    .membership-btn {
+        width: 100%; /* Tombol menjadi penuh di mobile */
+        max-width: 300px;
+    }
+}
+
+
+/* Section4 */
+.feature-box {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    text-align: center;
+
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.feature-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+h5 {
+    font-weight: bold;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.icon-small {
+    font-size: 1rem;
+    color: #000;
+}
+
+/* Tambahkan margin antara baris */
+.mb-4 {
+    margin-bottom: 24px;
+}
+
+.facility-title{
+    align-items:center;
+    justify-content: center;
+}
+/* Responsive */
+@media (max-width: 768px) {
+    .feature-box {
+        padding: 15px;
+        min-height: 160px; /* Menyesuaikan tinggi di layar lebih kecil */
+    }
+    h5 {
+        font-size: 1.1rem;
+    }
+    p {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .feature-box {
+        padding: 10px;
+        text-align: center;
+        min-height: 140px; /* Menyesuaikan tinggi di layar sangat kecil */
+    }
+    h5 {
+        justify-content: center;
+    }
+}
+
+
+.footer {
+    background: #011936;
+    color: #011936;
+}
+
+.footer-logo {
+    width: 150px; /* Sesuaikan ukuran logo */
+}
+
+.footer-menu a {
+    font-weight: 500;
+}
+
+.footer-menu a:hover {
+    text-decoration: underline;
+}
+
+.social-icons a {
+    transition: 0.3s;
+}
+
+.social-icons a:hover {
+    color: #ccc;
+}

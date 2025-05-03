@@ -9,40 +9,47 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
     protected $fillable = [
         'name',
         'email',
+        'address',
+        'gender',
+        'phone',
+        'role',
+        'is_member',
+        'membership_type_id',
         'password',
+        'join_date',
+        'expire_date',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
     }
+
+    public function membershipType()
+    {
+        return $this->belongsTo(\App\Models\MembershipType::class, 'membership_type_id');
+    }
+
+    public function membership()
+    {
+        return $this->hasOne(Membership::class);
+    }
+    
+    public function isAdmin()
+{
+    return $this->role === 'admin';
 }
+}
+

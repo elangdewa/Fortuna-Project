@@ -1,0 +1,55 @@
+.main-content {
+    margin-left: 250px; /* jarak dari sidenav */
+    padding: 20px;
+}
+
+.table-responsive {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #ffffff;
+}
+
+th, td {
+    padding: 12px 15px;
+    text-align: left;
+}
+
+thead {
+    background-color: #007bff;
+    color: #ffffff;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+.btn {
+    margin-right: 5px;
+}
+.container {
+    margin-left: 250px; /* supaya tidak nabrak sidenav */
+    padding: 20px;
+}
+
+.table-responsive {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+input[type="text"] {
+    border-radius: 5px 0 0 5px;
+}
+
+button.btn-primary {
+    border-radius: 0 5px 5px 0;
+}

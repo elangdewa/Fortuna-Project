@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Homepage</title>
 
-    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
-    <link href="{{ asset('css/Fitness.css') }}" rel="stylesheet">
+    @vite(['resources/css/Fitness.css', 'resources/js/app.js'])
+    {{-- <link href="{{ asset('css/Fitness.css') }}" rel="stylesheet"> --}}
     <!-- Bootstrap Icons -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
 <script>
@@ -19,7 +19,7 @@
 </head>
 <body>
     @include('components.navbar')
-mdqwoqmwodwqmdoqwmdowq
+
     @vite('resources/js/app.js')
 </body>
 </html>

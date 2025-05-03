@@ -1,0 +1,109 @@
+/* Background full screen */
+.login-background {
+    background-image: url('../images/Home.jpg');
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+    width: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Gelap tipis di atas gambar */
+.login-background .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(1, 25, 54, 0.7); /* Semi-transparent navy */
+    z-index: 1;
+}
+
+/* Wrapper untuk form */
+.form-wrapper {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 600px;
+    padding: 30px;
+}
+
+/* Form styling */
+/* Warna biru solid untuk form */
+/* Warna card dan teks putih */
+.login-form.card {
+    background-color: #011936; /* Biru solid Bootstrap */
+    color: white;
+    border: none;
+}
+
+.login-form.card .card-body {
+    background-color: transparent; /* Biar ikut warna card */
+    color: white;
+}
+
+/* Teks di dalam form tetap putih */
+.card-body label,
+.card-body p,
+.card-body h2{
+    color: white !important;
+}
+
+/* Warna kuning untuk link di form login */
+.card-body a {
+    color: #e6a821 !important;
+   font-weight: bold;
+    text-decoration: none;
+    transition: color 0.3s ease; /* Transisi warna saat hover */
+}
+
+.card-body a:hover {
+    text-decoration: underline;
+    color: #f0b500 !important; /* Hover warna sedikit lebih terang (opsional) */
+    
+}
+
+
+/* Input field styling */
+.card-body input.form-control {
+    background-color: rgba(255, 255, 255, 0.1); /* Biru transparan */
+    color: white;
+    border: 1px solid #fff;
+    outline: none; /* Hilangkan outline biru */
+    box-shadow: none; /* Hilangkan efek shadow biru */
+    border-color: #FDB833; /* Opsional: Ganti dengan warna border lain */
+
+}
+
+.card-body input::placeholder {
+    color: white;
+    opacity: 0.7; /* Transparansi placeholder */
+}
+
+
+.btn-primary {
+    background-color: #FDB833 !important;
+    border-color: #FDB833 !important;
+    color: #011936;
+    font-weight: 600;
+}
+
+.btn-primary:hover {
+    background-color: #e6a821 !important;
+    border-color: #e6a821 !important;
+    color: #011936;
+}
+
+@media (max-width: 768px) {
+    .form-wrapper {
+        max-width: 90%; /* Sesuaikan lebar untuk layar kecil */
+        padding: 20px;
+    }
+
+    .login-form {
+        padding: 2rem; /* Kurangi padding pada layar kecil */
+    }
+}

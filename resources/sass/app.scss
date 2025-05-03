@@ -1,1 +1,9 @@
-@import 'bootstrap/scss/bootstrap';
+
+
+// Variables
+@use 'variables';
+
+// Bootstrap
+@use 'bootstrap/scss/bootstrap';
+@use "bootstrap-icons/font/bootstrap-icons.css";
+// @use "../../node_modules/bootstrap/scss/bootstrap";

@@ -1,0 +1,114 @@
+/* GLOBAL STYLES */
+.main-content {
+    flex: 1;
+    padding: 20px;
+    transition: all 0.3s ease;
+    width: calc(100% - 250px);
+}
+
+.container {
+    background-color: #011936;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.card {
+    background-color: #011c39;
+    border: none;
+    border-radius: 10px;
+}
+
+/* FORM STYLES */
+h2 {
+    font-size: 2rem;
+    font-weight: bold;
+    color: white;
+    text-align: center;
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #f9b233;
+}
+
+.form-control {
+    background-color: #e6a821 !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    color: #011936 !important;
+    padding: 0.75rem 1rem;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    box-shadow: 0 0 0 0.2rem rgba(230, 168, 33, 0.5);
+    border-color: #f9b233 !important;
+}
+
+/* SPECIAL STYLES FOR SELECT DROPDOWN */
+select.form-control {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23011936' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 16px 12px;
+    padding-right: 2.5rem !important;
+}
+
+select.form-control option {
+    background-color: #e6a821;
+    color: #011936;
+    padding: 10px;
+}
+
+/* DATE INPUT STYLES */
+input[type="date"].form-control::-webkit-calendar-picker-indicator {
+    filter: invert(0.5);
+    cursor: pointer;
+}
+
+/* BUTTON STYLES */
+.btn-warning {
+    background-color: #f9b233;
+    border-color: #f9b233;
+    color: #011936;
+    font-weight: 600;
+    padding: 10px 25px;
+}
+
+.btn-warning:hover {
+    background-color: #e6a821;
+    border-color: #e6a821;
+    color: #011936;
+}
+
+/* RESPONSIVE ADJUSTMENTS */
+@media (max-width: 768px) {
+    .main-content {
+        width: 100%;
+        padding: 15px;
+    }
+    
+    .form-control {
+        padding: 0.6rem 1rem;
+    }
+    
+    select.form-control {
+        padding-right: 2rem !important;
+    }
+}
+
+/* LABEL STYLES */
+.form-group label,
+.col-md-6 label,
+.col-md-12 label {
+    color: white !important;
+    font-weight: 500;
+    margin-bottom: 8px;
+    display: block;
+    font-size: 16px;
+}

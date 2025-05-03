@@ -12,7 +12,7 @@
 
 </head>
 <body>
-    @include('components.navbar')
+    @include('layouts.navbar')
 
     <section class="bg-home">
         <div class="overlay">
@@ -25,7 +25,7 @@
             </div>
         </div>
     </section>
-@include('components.footer')
+@include('layouts.footer')
 
     @vite('resources/js/app.js')
 </body>

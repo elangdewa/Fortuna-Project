@@ -1,0 +1,19 @@
+/* Tambahkan margin kiri untuk memberikan jarak dari sidebar */
+.container {
+    margin-left: 250px; /* Atur sesuai lebar sidebar */
+}
+
+/* Jika ada sidebar dengan fixed position, pastikan konten tidak menutupi sidebar */
+.main-content {
+    margin-left: 250px; /* Sesuaikan dengan lebar sidebar */
+    padding: 20px;
+}
+
+/* Jika responsive, atur margin untuk layar kecil */
+@media (max-width: 768px) {
+    .container,
+    .main-content {
+        margin-left: 0;
+        padding: 20px;
+    }
+}

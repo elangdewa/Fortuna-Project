@@ -1,5 +1,6 @@
 @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 <link href="{{ asset('css/navbar.css') }}" rel="stylesheet">
+
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
 
 <header class="custom-header text-white py-3">
@@ -20,8 +21,8 @@
         <!-- Login & Register -->
         <div class="nav-auth d-none d-lg-block">
             <ul class="nav">
-                <li class="nav-item"><a href="/Fitness" class="nav-link btn btn-success text-white">Login</a></li>
-                <li class="nav-item"><a href="#" class="nav-link btn btn-success text-white">Register</a></li>
+                <li class="nav-item"><a href="{{ route('login') }}" class="nav-link btn btn-success text-white">Login</a></li>
+                <li class="nav-item"><a href="/register" class="nav-link btn btn-success text-white">Register</a></li>
             </ul>
         </div>
 
@@ -37,8 +38,8 @@
             <li class="nav-item"><a href="/Fitness" class="nav-link text-white">Kelas Fitness</a></li>
             <li class="nav-item"><a href="/membership" class="nav-link text-white">Membership</a></li>
             <li class="nav-item"><a href="/about" class="nav-link text-white">Tentang Kami</a></li>
-            <li class="nav-item"><a href="#" class="nav-link btn btn-success text-white">Login</a></li>
-            <li class="nav-item"><a href="#" class="nav-link btn btn-success text-white">Register</a></li>
+            <li class="nav-item"><a href="/login" class="nav-link btn btn-success text-white">Login</a></li>
+            <li class="nav-item"><a href="/register" class="nav-link btn btn-success text-white">Register</a></li>
         </ul>
     </div>
 </header>
