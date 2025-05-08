@@ -1,7 +1,8 @@
 <?php
 
+
 namespace App\Models;
-use App\Models\PersonalTrainer;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -9,19 +10,14 @@ class FitnessClass extends Model
 {
     use HasFactory;
 
-    // Define the table name if it's different from the default
-    protected $table = 'fitness_classes';
+    protected $fillable = [
+        'class_name',
+        'description',
+        'capacity'
+    ];
 
-    // Define fillable fields
-    protected $fillable = ['class_name', 'description', 'trainer_id', 'capacity'];
-
-
-    public function trainer()
+    public function schedules()
     {
-        return $this->belongsTo(PersonalTrainer::class, 'trainer_id');
+        return $this->hasMany(ClassSchedule::class, 'class_id');
     }
-
-
 }
-
-

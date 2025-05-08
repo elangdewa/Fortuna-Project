@@ -11,6 +11,7 @@
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addClassModal">
             Tambah Kelas Baru
         </button>
+    
     </div>
 
     @if(session('success'))
@@ -30,7 +31,6 @@
                             <th>ID</th>
                             <th>Nama Kelas</th>
                             <th>Deskripsi</th>
-                            <th>Pelatih</th>
                             <th>Kapasitas</th>
                             <th>Aksi</th>
                         </tr>
@@ -42,19 +42,24 @@
                                     <td>{{ $class->id }}</td>
                                     <td>{{ $class->class_name }}</td>
                                     <td>{{ Str::limit($class->description, 50) }}</td>
-                                    <td>{{ $class->trainer->name ?? 'Tidak ditemukan' }}</td>
+                                   
                                     <td>{{ $class->capacity }}</td>
                                     <td>
                                         <button class="btn btn-warning btn-sm edit-btn"
                                             data-id="{{ $class->id }}"
                                             data-class_name="{{ $class->class_name }}"
                                             data-description="{{ $class->description }}"
-                                            data-trainer_id="{{ $class->trainer_id }}"
+                                          
                                             data-capacity="{{ $class->capacity }}"
                                             data-bs-toggle="modal"
                                             data-bs-target="#editClassModal">
                                             Edit
                                         </button>
+
+                                        <a href="{{ route('admin.fitness.schedules.index', $class->id) }}" class="btn btn-info btn-sm mt-1">
+                                            Kelola Jadwal
+                                        </a>
+                                        
                                         <form action="{{ route('admin.fitness.destroy', $class->id) }}" method="POST">
                                             @csrf
                                             @method('DELETE')
@@ -74,9 +79,9 @@
         </div>
     </div>
 
-
-
 </div>
+
+
 
 <!-- Modal Tambah Kelas -->
 <div class="modal fade" id="addClassModal" tabindex="-1" aria-labelledby="addClassModalLabel" aria-hidden="true">
@@ -98,21 +103,7 @@
                         <label for="description" class="form-label">Deskripsi</label>
                         <textarea class="form-control" id="description" name="description" rows="3"></textarea>
                     </div>
-                    <div class="mb-3">
-                        <label for="trainer_id" class="form-label">Pelatih</label>
-                        <select class="form-control" id="trainer_id" name="trainer_id" required>
-                            <option value="">-- Pilih Trainer --</option>
-                            @isset($trainers)
-                                @foreach($trainers as $trainer)
-                                    <option value="{{ $trainer->id }}">
-                                        {{ $trainer->name }} ({{ $trainer->experience }})
-                                    </option>
-                                @endforeach
-                            @else
-                                <option value="" disabled>Tidak ada trainer tersedia</option>
-                            @endisset
-                        </select>
-                    </div>
+                    
                     <div class="mb-3">
                         <label for="capacity" class="form-label">Kapasitas</label>
                         <input type="number" class="form-control" id="capacity" name="capacity" required>
@@ -147,16 +138,7 @@
                         <label for="edit_description" class="form-label">Deskripsi</label>
                         <textarea class="form-control" id="edit_description" name="description" rows="3"></textarea>
                     </div>
-                    <div class="mb-3">
-                        <label for="edit_trainer_id" class="form-label">Pelatih</label>
-                        <select class="form-control" id="edit_trainer_id" name="trainer_id" required>
-                            @if(isset($trainers) && count($trainers) > 0)
-                                @foreach($trainers as $trainer)
-                                    <option value="{{ $trainer->id }}">{{ $trainer->name }}</option>
-                                @endforeach
-                            @endif
-                        </select>
-                    </div>
+                   
                     <div class="mb-3">
                         <label for="edit_capacity" class="form-label">Kapasitas</label>
                         <input type="number" class="form-control" id="edit_capacity" name="capacity" required>
@@ -185,13 +167,13 @@
                     const id = this.getAttribute('data-id');
                     const className = this.getAttribute('data-class_name');
                     const description = this.getAttribute('data-description');
-                    const trainerId = this.getAttribute('data-trainer_id');
+                   
                     const capacity = this.getAttribute('data-capacity');
 
                     // Set nilai form
                     document.getElementById('edit_class_name').value = className;
                     document.getElementById('edit_description').value = description;
-                    document.getElementById('edit_trainer_id').value = trainerId;
+                  
                     document.getElementById('edit_capacity').value = capacity;
 
                     // Set action form

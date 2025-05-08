@@ -1,3 +1,4 @@
+
 /* Logo */
 .logo {
     height: 40px; /* Sesuaikan tinggi logo agar besar */
@@ -7,14 +8,14 @@
 }
 
 .custom-header {
-    background-color: #011936 ;
+    background-color: #080808 ;
     height: 80px; /* Sesuaikan tinggi navbar */
     display: flex;
     align-items: center;
 }
 
 .nav-auth .nav-link.btn:hover {
-    background-color: #FDB833 !important;
+    background-color: #da9100 !important;
     color: #10375C !important;
 }
 /* Navigasi Tengah */
@@ -61,7 +62,7 @@
     transform: translate(-50%, 0);
     width: 80%;
     max-width: 300px;
-    background-color: #011936;
+    background-color: #080808;
     padding: 20px;
     border-radius: 10px;
     text-align: center;
@@ -94,13 +95,8 @@
         display: block;
     }
     .mobile-menu .nav-link.btn:hover {
-        background-color: #FDB833 !important;
+        background-color: #da9100 !important;
         color: #10375C !important;
     }
 
-}
-
-/* Menu aktif ketika tombol ditekan */
-.mobile-menu.active {
-    display: block;
 }

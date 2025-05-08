@@ -6,7 +6,7 @@
 
 <div class="main-content" id="mainContent">
     <div class="container mt-5">
-        <h2>Daftar Trainers</h2>
+       
 
         <!-- Form Search -->
         <form action="{{ route('admin.trainers.index') }}" method="GET">
@@ -23,6 +23,8 @@
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addTrainerModal">
                 Tambah Trainer
             </button>
+            <a href="{{ route('admin.trainer.orders') }}" class="btn btn-info">Lihat Pesanan Trainer</a>
+
         </div>
         
         @if(session('success'))

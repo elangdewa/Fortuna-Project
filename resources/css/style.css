@@ -8,14 +8,14 @@
 }
 
 .custom-header {
-    background-color: #011936 ;
+    background-color: #080808 ;
     height: 80px; /* Sesuaikan tinggi navbar */
     display: flex;
     align-items: center;
 }
 
 .nav-auth .nav-link.btn:hover {
-    background-color: #FDB833 !important;
+    background-color: #da9100 !important;
     color: #10375C !important;
 }
 /* Navigasi Tengah */
@@ -62,7 +62,7 @@
     transform: translate(-50%, 0);
     width: 80%;
     max-width: 300px;
-    background-color: #011936;
+    background-color: #080808;
     padding: 20px;
     border-radius: 10px;
     text-align: center;
@@ -95,7 +95,7 @@
         display: block;
     }
     .mobile-menu .nav-link.btn:hover {
-        background-color: #FDB833 !important;
+        background-color: #da9100 !important;
         color: #10375C !important;
     }
 
@@ -237,7 +237,7 @@ p {
 
 /* Styling Section */
 .about-section {
-    background-color: #011936;
+    background-color: #080808;
     padding: 4rem 2rem;
     text-align: center; /* Membuat semua teks di dalamnya menjadi rata tengah */
 }
@@ -301,7 +301,7 @@ p {
 .membership-btn {
     display: inline-block;
     background-color: #fff;
-    color: #011936;
+    color: #080808;
     font-size: 1rem;
     font-weight: bold;
     padding: 12px 20px;
@@ -312,8 +312,8 @@ p {
 
 /* Hover Effect */
 .membership-btn:hover {
-    background-color: #FDB833;
-    color: #011936;
+    background-color: #da9100;
+    color: #080808;
     transform: translateY(-3px);
     box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
 }
@@ -411,8 +411,8 @@ h5 {
 
 
 .footer {
-    background: #011936;
-    color: #011936;
+    background: #080808;
+    color: #080808;
 }
 
 .footer-logo {

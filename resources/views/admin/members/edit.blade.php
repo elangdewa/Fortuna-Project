@@ -1,7 +1,8 @@
-@extends('layouts.app')
+@extends('layouts.admin')
+
+@section('admin-content')
 <link href="{{ asset('css/create.css') }}" rel="stylesheet">
-@section('content')
-@include('layouts.sidenavbar')
+
 
 <!-- Tambahkan kelas main-content untuk memastikan ada jarak dari sidebar -->
 <div class="main-content container mt-5">
@@ -56,8 +57,8 @@
                         <option value="{{ $membership->id }}" 
                                 data-price="{{ $membership->price }}"
                                 data-duration="{{ $membership->duration_in_months }}"
-                                {{ $member->membership_type_id == $membership->id ? 'selected' : '' }}>
-                            {{ $membership->name }}
+                                {{ $member->membership->membership_type == $membership->id ? 'selected' : '' }}>
+                                {{ $membership->name }}
                         </option>
                     @endforeach
                 </select>
@@ -66,19 +67,38 @@
             <div class="form-group">
                 <label for="price_display">Harga:</label>
                 <input type="text" id="price_display" class="form-control" readonly>
-                <input type="hidden" id="price" name="price" value="{{ $member->price }}">
+                <input type="hidden" id="price" name="price" value="{{ $member->membership->price ?? 0 }}">
             </div>
         </div>
 
         <div class="form-row">
             <div class="form-group">
                 <label>Tanggal Mulai:</label>
-                <input type="date" id="start_date" name="start_date" class="form-control" value="{{ old('start_date', $member->join_date) }}">
+                <input type="date" id="start_date" name="start_date" class="form-control" value="{{ old('start_date', $member->membership->start_date ? date('Y-m-d', strtotime($member->membership->start_date)) : '') }}" required>
             </div>
 
             <div class="form-group">
                 <label>Tanggal Berakhir:</label>
-                <input type="date" id="end_date" name="end_date" class="form-control" value="{{ old('end_date', $member->expire_date) }}">
+                <input type="date" id="end_date" name="end_date" class="form-control" value="{{ old('end_date', $member->membership->end_date ? date('Y-m-d', strtotime($member->membership->end_date)) : '') }}" required>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="status">Status:</label>
+                <select name="status" class="form-control" required>
+                    <option value="active" {{ $member->membership->status == 'active' ? 'selected' : '' }}>Active</option>
+                    <option value="expired" {{ $member->membership->status == 'expired' ? 'selected' : '' }}>Expired</option>
+                    <option value="inactive" {{ $member->membership->status == 'inactive' ? 'selected' : '' }}>Inactive</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="payment_status">Payment Status:</label>
+                <select name="payment_status" class="form-control" required>
+                    <option value="paid" {{ $member->membership->payment_status == 'paid' ? 'selected' : '' }}>Paid</option>
+                    <option value="unpaid" {{ $member->membership->payment_status == 'unpaid' ? 'selected' : '' }}>Unpaid</option>
+                </select>
             </div>
         </div>
 
@@ -141,11 +161,13 @@
             endDate.setMonth(endDate.getMonth() + parseInt(selectedMembership.duration_in_months));
             endDateInput.value = endDate.toISOString().split('T')[0];
         } else {
-            // If start date is already set, just recalculate the end date
-            const startDate = new Date(startDateInput.value);
-            const endDate = new Date(startDate);
-            endDate.setMonth(endDate.getMonth() + parseInt(selectedMembership.duration_in_months));
-            endDateInput.value = endDate.toISOString().split('T')[0];
+            // If start date is already set, just recalculate the end date if user wants to
+            if (confirm('Apakah Anda ingin memperbarui tanggal berakhir berdasarkan durasi membership yang baru?')) {
+                const startDate = new Date(startDateInput.value);
+                const endDate = new Date(startDate);
+                endDate.setMonth(endDate.getMonth() + parseInt(selectedMembership.duration_in_months));
+                endDateInput.value = endDate.toISOString().split('T')[0];
+            }
         }
     }
     

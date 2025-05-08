@@ -11,11 +11,6 @@ class AdminController extends Controller
         return view('admin.admin');
     }
 
-    public function profile()
-    {
-        return view('admin.profile');
-    }
-
     // List Member
     public function members()
     {

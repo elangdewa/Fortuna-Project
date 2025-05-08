@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\PersonalTrainer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-
+use App\Models\PersonalTrainerOrder;
 
 class TrainerController extends Controller
 {

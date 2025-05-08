@@ -19,12 +19,6 @@
         <div class="text-center text-white py-3">
             <h2 class="m-0 fs-4">Selamat Datang, {{ auth()->user()->name }}</h2>
         </div>
-        
-        <!-- Admin Profile -->
-        <div class="admin-profile">
-            <i class="bi bi-person-circle"></i>
-            <h5 class="mt-2">Admin</h5>
-        </div>
 
         <!-- Menu Navigation -->
         <nav class="nav flex-column w-100 px-3">
@@ -56,6 +50,7 @@
                 <i class="bi bi-person-badge"></i>
                 <span class="ms-2">Coach</span>
             </a>
+            
         </nav>
 
         <!-- Logout -->

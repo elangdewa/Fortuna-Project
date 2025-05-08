@@ -16,33 +16,52 @@
             <i class="bi bi-layout-sidebar" id="toggleIcon"></i>
         </button>
 
-     
+
         <div class="text-center text-white py-3">
             <h2 class="m-0 fs-4">Selamat Datang, {{ auth()->user()->name }}</h2>
+
+            @php
+                $membership = auth()->user()->membership;
+            @endphp
+            
+            @if ($membership && $membership->status != 'inactive')
+                <p class="text-white m-0">
+                    Membership: 
+                    <span class="badge 
+                        @if($membership->status == 'active') bg-success
+                        @elseif($membership->status == 'expired') bg-danger
+                        @else bg-warning @endif">
+                        {{ ucfirst($membership->status) }}
+                    </span>
+                </p>
+            @else
+                <p class="text-white m-0">
+                    <span class="badge bg-secondary">Belum jadi member</span>
+                </p>
+            @endif
         </div>
         <!-- Menu Navigation -->
         <nav class="nav flex-column w-100 px-3">
-            <a href="{{ route('admin.admin') }}" class="nav-link tooltip-sidebar {{ Request::is('admin') ? 'active' : '' }}" data-title="Dashboard">
-                <i class="bi bi-speedometer2"></i>
-                <span class="ms-2">Dashboard</span>
+            <a href="{{ route('user.home') }}" class="nav-link tooltip-sidebar {{ Request::is('user/home') ? 'active' : '' }}" data-title="Beranda">
+                <i class="bi bi-house-door"></i>
+                <span class="ms-2">Beranda</span>
             </a>
-            <a href="{{ route('admin.profile') }}" class="nav-link tooltip-sidebar {{ Request::is('admin/profile') ? 'active' : '' }}" data-title="Profil Admin">
-                <i class="bi bi-person"></i>
-                <span class="ms-2">Membership</span>
-            </a>
-            <a href="{{ route('members.view') }}" class="nav-link tooltip-sidebar {{ Request::is('admin/members/view') ? 'active' : '' }}" data-title="Lihat Member">
-                <i class="bi bi-people"></i>
-                <span class="ms-2">Pelatih Pribadi</span>
-            </a>
-            <a href="{{ route('members.create') }}" class="nav-link tooltip-sidebar {{ Request::is('admin/members/create') ? 'active' : '' }}" data-title="Tambah Member">
-                <i class="bi bi-person-plus"></i>
+            <a href="{{ route('user.fitness') }}" class="nav-link tooltip-sidebar {{ Request::is('user/fitness') ? 'active' : '' }}" data-title="Kelas Fitness">
+                <i class="bi bi-person-arms-up"></i>
                 <span class="ms-2">Kelas Fitness</span>
             </a>
-            <a href="{{ route('admin.paketmember.index') }}" class="nav-link tooltip-sidebar {{ Request::is('admin/paketmember') ? 'active' : '' }}" data-title="Paket Member">
+            <a href="{{ route('user.member') }}" class="nav-link tooltip-sidebar {{ Request::is('user/member') ? 'active' : '' }}" data-title="Membership">
+                <i class="bi bi-person-vcard"></i>
+                <span class="ms-2">Membership</span>
+            </a>
+            <a href="{{ route('user.trainer') }}" class="nav-link tooltip-sidebar {{ Request::is('user/trainer') ? 'active' : '' }}" data-title="Pelatih Pribadi">
+                <i class="bi bi-person-lines-fill"></i>
+                <span class="ms-2">Pelatih Pribadi</span>
+            </a>
+            <a href="{{ route('user.setting') }}" class="nav-link tooltip-sidebar {{ Request::is('user/setting') ? 'active' : '' }}" data-title="Pengaturan">
                 <i class="bi bi-gear"></i>
                 <span class="ms-2">Pengaturan</span>
             </a>
-        </nav>
 
         <!-- Logout -->
         <form action="{{ route('logout') }}" method="POST" class="mt-auto w-100 px-3">
@@ -103,9 +122,9 @@
 
     // Close sidebar when clicking outside
     document.addEventListener('click', function(event) {
-        if (window.innerWidth <= 768 && 
-            !sidebar.contains(event.target) && 
-            !mobileToggle.contains(event.target) && 
+        if (window.innerWidth <= 768 &&
+            !sidebar.contains(event.target) &&
+            !mobileToggle.contains(event.target) &&
             sidebar.classList.contains('mobile-visible')) {
             sidebar.classList.remove('mobile-visible');
         }

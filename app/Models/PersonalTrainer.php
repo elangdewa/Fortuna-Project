@@ -22,4 +22,9 @@ class PersonalTrainer extends Model
     {
         return $this->hasMany(FitnessClass::class);
     }
+
+    public function orders()
+    {
+        return $this->hasMany(PersonalTrainerOrder::class, 'trainer_id');
+    }
 }

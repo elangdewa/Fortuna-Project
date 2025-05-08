@@ -35,7 +35,7 @@
 /* Warna biru solid untuk form */
 /* Warna card dan teks putih */
 .login-form.card {
-    background-color: #011936; /* Biru solid Bootstrap */
+    background-color: #080808; /* Biru solid Bootstrap */
     color: white;
     border: none;
     
@@ -75,7 +75,7 @@
     border: 1px solid #fff;
     outline: none; /* Hilangkan outline biru */
     box-shadow: none; /* Hilangkan efek shadow biru */
-    border-color: #FDB833; /* Opsional: Ganti dengan warna border lain */
+    border-color: #da9100; /* Opsional: Ganti dengan warna border lain */
 
 }
 
@@ -86,16 +86,16 @@
 
 
 .btn-primary {
-    background-color: #FDB833 !important;
-    border-color: #FDB833 !important;
-    color: #011936;
+    background-color: #da9100 !important;
+    border-color: #da9100 !important;
+    color: #080808;
     font-weight: 600;
 }
 
 .btn-primary:hover {
     background-color: #e6a821 !important;
     border-color: #e6a821 !important;
-    color: #011936;
+    color: #080808;
 }
 
 @media (max-width: 768px) {
@@ -112,8 +112,8 @@
 /* Warna ikon emas dan latar belakang biru */
 /* Warna ikon emas dan latar belakang biru */
 .input-group-text {
-    background-color: #001f3f; /* Warna biru */
-    color: #FFD700; /* Warna emas */
+    background-color: #080808; /* Warna biru */
+    color: #da9100; /* Warna emas */
     border: none; /* Hilangkan border */
     display: flex;
     align-items: center;
@@ -122,15 +122,15 @@
 
 /* Kotak teks (input dan textarea) dengan warna biru */
 .form-control {
-    background-color: #001f3f; /* Warna biru */
+    background-color: #080808; /* Warna biru */
     color: #fff; /* Warna teks putih */
-    border: 1px solid #FFD700; /* Border emas */
+    border: 1px solid #da9100; /* Border emas */
 }
 
 .form-control:focus {
     background-color: #001f3f; /* Tetap biru saat fokus */
     color: #fff;
-    border-color: #FFD700; /* Border emas saat fokus */
+    border-color: #da9100; /* Border emas saat fokus */
     box-shadow: none; /* Hilangkan efek shadow default */
 }
 
@@ -138,13 +138,13 @@
 select.form-control {
     background-color: #001f3f; /* Warna biru */
     color: #fff; /* Warna teks putih */
-    border: 1px solid #FFD700; /* Border emas */
+    border: 1px solid #da9100; /* Border emas */
 }
 
 select.form-control:focus {
     background-color: #001f3f;
     color: #fff;
-    border-color: #FFD700;
+    border-color: #da9100;
     box-shadow: none;
 }
 
@@ -152,12 +152,12 @@ select.form-control:focus {
 textarea.form-control {
     background-color: #001f3f; /* Warna biru */
     color: #fff; /* Warna teks putih */
-    border: 1px solid #FFD700; /* Border emas */
+    border: 1px solid #da9100; /* Border emas */
 }
 
 textarea.form-control:focus {
     background-color: #001f3f;
     color: #fff;
-    border-color: #FFD700;
+    border-color: #da9100;
     box-shadow: none;
 }

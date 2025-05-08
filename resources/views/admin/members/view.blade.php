@@ -1,8 +1,8 @@
-@extends('layouts.app')
-@section('content')
+@extends('layouts.admin')
+
+@section('admin-content')
 <link href="{{ asset('css/member.css') }}" rel="stylesheet">
 
-@include('layouts.sidenavbar')
 
 <div class="main-content" id="mainContent">
     <div class="container mt-5">
@@ -21,46 +21,50 @@
     <!-- Table Members -->
     <div class="table-responsive">
         <table class="table table-bordered" style="background:white;">
-         <thead>
-    <tr>
-        <th>Nama</th>
-        <th>Email</th>
-        <th>Telepon</th>
-        <th>Membership</th>
-        <th>Mulai</th>
-        <th>Berakhir</th>
-        <th>Aksi</th>
-    </tr>
-</thead>
+            <thead>
+                <tr>
+                    <th>Nama</th>
+                    <th>Email</th>
+                    <th>Telepon</th>
+                    <th>Membership</th>
+                    <th>Status</th>
+                    <th>Mulai</th>
+                    <th>Berakhir</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
             <tbody>
-    @forelse($members as $member)
-        <tr>
-            <td>{{ $member->name }}</td>
-            <td>{{ $member->email }}</td>
-            <td>{{ $member->phone }}</td>
-            <td>{{ $member->membershipType->name ?? '-' }}</td>
-            <td>{{ $member->join_date ?? '-' }}</td>
-            <td>{{  $member->expire_date ?? '-' }}</td>
-
-
-            <td>
-
-
-                <a href="{{ route('admin.members.edit', $member->id) }}" class="btn btn-sm btn-warning">Edit</a>
-                <form action="{{ route('admin.members.destroy', $member->id) }}" method="POST" style="display:inline;">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Yakin ingin menghapus?')">Hapus</button>
-                </form>
-            </td>
-        </tr>
-    @empty
-        <tr>
-            <td colspan="8" class="text-center">Tidak ada member ditemukan.</td>
-        </tr>
-    @endforelse
-</tbody>
-
+                @forelse($members as $member)
+                    <tr>
+                        <td>{{ $member->name }}</td>
+                        <td>{{ $member->email }}</td>
+                        <td>{{ $member->phone }}</td>
+                        <td>{{ $member->membership->type->name ?? '-' }}</td>
+                        <td>
+                            <span class="badge 
+                                @if($member->membership->status == 'active') bg-success
+                                @elseif($member->membership->status == 'expired') bg-danger
+                                @else bg-warning @endif">
+                                {{ $member->membership->status ?? 'inactive' }}
+                            </span>
+                        </td>
+                        <td>{{ $member->membership->start_date ? \Carbon\Carbon::parse($member->membership->start_date)->format('d M Y') : '-' }}</td>
+                        <td>{{ $member->membership->end_date ? \Carbon\Carbon::parse($member->membership->end_date)->format('d M Y') : '-' }}</td>
+                        <td>
+                            <a href="{{ route('admin.members.edit', $member->id) }}" class="btn btn-sm btn-warning">Edit</a>
+                            <form action="{{ route('admin.members.destroy', $member->id) }}" method="POST" style="display:inline;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Yakin ingin menghapus?')">Hapus</button>
+                            </form>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="8" class="text-center">Tidak ada member ditemukan.</td>
+                    </tr>
+                @endforelse
+            </tbody>
         </table>
     </div>
 </div>

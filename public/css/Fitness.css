@@ -5,12 +5,12 @@
 }
 
 .custom-header {
-    background-color: #011936 ;
+    background-color: #080808 ;
 }
 
 .nav-auth .nav-link.btn:hover {
-    background-color: #FDB833 !important;
-    color: #10375C !important;
+    background-color: #da9100 !important;
+    color: #080808 !important;
 }
 /* Navigasi Tengah */
 .nav-center {
@@ -51,7 +51,7 @@
 /* Menu mobile (default: hidden) */
 .mobile-menu {
     display: none;
-    background-color: #011936;
+    background-color: #080808;
     padding: 10px 0;
     text-align: center;
 }

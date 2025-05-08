@@ -77,4 +77,10 @@ class PaketMemberController extends Controller
                 ->with('error', 'Paket membership tidak dapat dihapus karena sedang digunakan!');
         }
     }
+
+    public function showMembershipForm()
+{
+    $types = MembershipType::all(); // pastikan kolom 'price' dan 'duration_in_months' ada
+    return view('nama_view_user', compact('types'));
+}
 }

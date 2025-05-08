@@ -14,11 +14,10 @@ class FitnessClassController extends Controller
 {
     public function index()
     {
-        $trainers = PersonalTrainer::all();
-        $classes = FitnessClass::with('trainer')->get();
+        $classes = FitnessClass::all();
+
         
         return view('admin.fitness.fitness', [
-            'trainers' => $trainers,
             'classes' => $classes
         ]);
     }
@@ -28,7 +27,7 @@ class FitnessClassController extends Controller
     $request->validate([
         'class_name' => 'required|string|max:255',
         'description' => 'nullable|string',
-        'trainer_id' => 'required|exists:personal_trainers,id',
+       
         'capacity' => 'required|integer|min:1',
     ]);
 
@@ -45,7 +44,7 @@ public function update(Request $request, $id)
     $request->validate([
         'class_name' => 'required|string|max:255',
         'description' => 'nullable|string',
-        'trainer_id' => 'required|exists:personal_trainers,id',
+       
         'capacity' => 'required|integer|min:1',
     ]);
 

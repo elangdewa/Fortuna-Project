@@ -1,6 +1,6 @@
 .main-content {
-    margin-left: 250px; /* jarak dari sidenav */
-    padding: 20px;
+    max-width: 1200px;
+    margin: auto;
 }
 
 .table-responsive {
@@ -19,7 +19,7 @@ th, td {
 }
 
 thead {
-    background-color: #007bff;
+    background-color: black;
     color: #ffffff;
 }
 
@@ -35,8 +35,8 @@ tbody tr:hover {
     margin-right: 5px;
 }
 .container {
-    margin-left: 250px; /* supaya tidak nabrak sidenav */
     padding: 20px;
+    width: 100%;
 }
 
 .table-responsive {
@@ -48,8 +48,25 @@ tbody tr:hover {
 
 input[type="text"] {
     border-radius: 5px 0 0 5px;
+    background-color: black;
+    color: white;
+    border: 1px solid #da9100;
+}
+
+input[type="text"]::placeholder {
+    color: #fff;
+    opacity: 0.8;
 }
 
 button.btn-primary {
     border-radius: 0 5px 5px 0;
+    background-color: #da9100;
+    border-color: #da9100;
+    color: white;
 }
+
+button.btn-primary:hover {
+    background-color: #c07f00;
+    border-color: #c07f00;
+}
+

@@ -1,67 +1,72 @@
+{{-- resources/views/admin/profile.blade.php --}}
 @extends('layouts.admin')
 
 @section('admin-content')
+    <div class="container">
+        <h1>Profil Pengguna</h1>
 
-<div class="container mt-5">
-    <h3 class="text-success fw-bold">Informasi Admin</h3>
+        {{-- Notifikasi sukses untuk update nama --}}
+        @if(session('success'))
+            <div class="alert alert-success">{{ session('success') }}</div>
+        @endif
 
-    {{-- Flash Message --}}
-    @if(session('success'))
-        <div class="alert alert-success mt-3">
-            {{ session('success') }}
-        </div>
-    @endif
-
-    @if($errors->any())
-        <div class="alert alert-danger mt-3">
-            <ul class="mb-0">
-                @foreach($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-
-    <!-- Profil Info -->
-    <div class="card p-3 mt-3 shadow-sm">
-        <h1>Welcome, {{ auth()->user()->name }}</h1>
-    </div>
-
-    <!-- Ganti Username -->
-    <div class="card p-3 mt-3 shadow-sm">
-        <h5>Ganti Nama Pengguna</h5>
-        <form action="{{ route('admin.update.username') }}" method="POST">
+        {{-- Form Ubah Nama --}}
+        <form action="{{ route('admin.profile.update') }}" method="POST">
             @csrf
             <div class="mb-3">
-                <label for="newUsername" class="form-label">Nama Pengguna Baru</label>
-                <input type="text" class="form-control" id="newUsername" name="name" 
-                       value="{{ auth()->user()->name }}" required>
-                    
-            </div>
-            <button type="submit" class="btn btn-success">Simpan</button>
-        </form>
-    </div>
+                <label for="name" class="form-label">Nama Pengguna</label>
+                <input type="text" class="form-control" id="name" name="name" value="{{ old('name', $user->name) }}" required>
 
-    <!-- Ganti Password -->
-    <div class="card p-3 mt-3 shadow-sm">
-        <h5>Ganti Password</h5>
-        <form action="{{ route('admin.update.password') }}" method="POST">
+                @error('name')
+                    <div class="text-danger">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <p><strong>Email:</strong> {{ $user->email }}</p>
+
+            <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+        </form>
+
+        <hr>
+
+        <h2>Ubah Password</h2>
+
+        {{-- Notifikasi sukses dan error untuk password --}}
+        @if (session('password_success'))
+            <div class="alert alert-success">{{ session('password_success') }}</div>
+        @endif
+
+        @if (session('password_error'))
+            <div class="alert alert-danger">{{ session('password_error') }}</div>
+        @endif
+
+        {{-- Validasi error --}}
+        @if ($errors->has('current_password') || $errors->has('new_password'))
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        {{-- Form Ubah Password --}}
+        <form action="{{ route('admin.profile.password') }}" method="POST">
             @csrf
             <div class="mb-3">
-                <label for="currentPassword" class="form-label">Password Saat Ini</label>
-                <input type="password" class="form-control" id="currentPassword" name="current_password" required>
+                <label for="current_password" class="form-label">Password Saat Ini</label>
+                <input type="password" name="current_password" class="form-control" required>
             </div>
             <div class="mb-3">
-                <label for="newPassword" class="form-label">Password Baru</label>
-                <input type="password" class="form-control" id="newPassword" name="new_password" required>
+                <label for="new_password" class="form-label">Password Baru</label>
+                <input type="password" name="new_password" class="form-control" required>
             </div>
             <div class="mb-3">
-                <label for="confirmPassword" class="form-label">Ulangi Password Baru</label>
-                <input type="password" class="form-control" id="confirmPassword" name="new_password_confirmation" required>
+                <label for="new_password_confirmation" class="form-label">Konfirmasi Password Baru</label>
+                <input type="password" name="new_password_confirmation" class="form-control" required>
             </div>
-            <button type="submit" class="btn btn-success">Ganti Password</button>
+            <button type="submit" class="btn btn-warning">Ubah Password</button>
         </form>
     </div>
-</div>
-
 @endsection
