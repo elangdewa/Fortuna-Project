@@ -9,14 +9,16 @@
     <h2>Daftar Member</h2>
 
     <!-- Form Search -->
-    <form action="{{ route('members.view') }}" method="GET" class="mb-4">
-        <div class="input-group" style="max-width: 400px;">
+    <div class="d-flex justify-content-end mb-4">
+    <form action="{{ route('members.view') }}" method="GET" style="max-width: 400px;" class="w-100">
+        <div class="input-group">
             <input type="text" name="search" class="form-control" placeholder="Cari nama, email, atau no telepon..." value="{{ request('search') }}">
             <div class="input-group-append">
                 <button class="btn btn-primary" type="submit">Cari</button>
             </div>
         </div>
     </form>
+</div>
 
     <!-- Table Members -->
     <div class="table-responsive">
@@ -26,6 +28,7 @@
                     <th>Nama</th>
                     <th>Email</th>
                     <th>Telepon</th>
+                    <th>Alamat</th>
                     <th>Membership</th>
                     <th>Status</th>
                     <th>Mulai</th>
@@ -39,9 +42,10 @@
                         <td>{{ $member->name }}</td>
                         <td>{{ $member->email }}</td>
                         <td>{{ $member->phone }}</td>
+                        <td>{{ $member->address }}</td>
                         <td>{{ $member->membership->type->name ?? '-' }}</td>
                         <td>
-                            <span class="badge 
+                            <span class="badge
                                 @if($member->membership->status == 'active') bg-success
                                 @elseif($member->membership->status == 'expired') bg-danger
                                 @else bg-warning @endif">

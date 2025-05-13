@@ -7,8 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class PersonalTrainerOrder extends Model
 {
+    public $timestamps = false; // Nonaktifkan timestamp
     use HasFactory;
-    public $timestamps = false;
+ 
 
 
     protected $fillable = ['user_id', 'trainer_id', 'order_date', 'notes', 'status'];

@@ -3,14 +3,30 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Models\FitnessClass;
+use App\Models\PersonalTrainer;
+use App\Models\MembershipType;
+use App\Models\User;
+use App\Models\PersonalTrainerOrder;
 
 class AdminController extends Controller
 {
-    public function index()
+     public function index()
     {
-        return view('admin.admin');
-    }
+        $data = [
+            'totalMembers' => User::where('role', 'member')->count(),
+            'totalTrainers' => PersonalTrainer::count(),
+            'totalFitnessClasses' => FitnessClass::count(),
+            'totalPackages' => MembershipType::count(),
+            'recentMembers' => User::where('role', 'member')
+                                ->latest()
+                                ->take(5)
+                                ->get()
+        ];
 
+        return view('admin.admin', $data);
+    }
     // List Member
     public function members()
     {
@@ -35,7 +51,7 @@ class AdminController extends Controller
         return view('admin.fitness.fitness');
     }
 
-  
+
     public function coach()
     {
         return view('admin.trainer.trainer');

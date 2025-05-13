@@ -1,0 +1,558 @@
+/* Hero Section Redesigned */
+.bg-home-redesigned {
+    background-image: url('../images/gym.jpg'); /* Gunakan foto interior gym berkualitas tinggi */
+    background-size: cover;
+    background-position: center;
+    width: 100%;
+    height: 85vh;
+    position: relative;
+    margin: 0; /* Reset margin */
+    border-radius: 0; /* Menghapus border radius - full width */
+}
+
+.overlay-gradient {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.4) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    border-radius: 0; /* Menghapus border radius */
+}
+
+.hero-content {
+    max-width: 600px;
+    padding: 0 20px;
+    margin-left: 8%;
+    position: relative;
+}
+
+.hero-title {
+    font-size: 3.5rem;
+    font-weight: 800;
+    line-height: 1.2;
+    color: white;
+    margin-bottom: 25px;
+    position: relative;
+}
+
+.hero-title .highlight {
+    color: #FFD700; /* Warna gold/kuning */
+    position: relative;
+}
+
+.hero-title .highlight:after {
+    content: '';
+    position: absolute;
+    width: 40%;
+    height: 3px;
+    background: #FFD700;
+    bottom: -8px;
+    left: 0;
+}
+
+.hero-description {
+    font-size: 1.2rem;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 30px;
+    line-height: 1.6;
+    max-width: 90%;
+}
+
+.hero-cta {
+    display: flex;
+    gap: 15px;
+}
+
+
+
+/* Media Queries for Responsiveness */
+@media (max-width: 992px) {
+    .hero-title {
+        font-size: 3rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-content {
+        margin-left: 0;
+        text-align: center;
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .hero-title {
+        font-size: 2.5rem;
+    }
+
+    .hero-title .highlight:after {
+        left: 30%;
+    }
+
+    .hero-description {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 576px) {
+    .bg-home-redesigned {
+        height: 80vh;
+    }
+
+    .hero-title {
+        font-size: 2rem;
+    }
+
+    .hero-cta {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .btn {
+        width: 100%;
+        text-align: center;
+    }
+}
+        /* Base styling */
+        .pricing-section {
+            background-color: #080808;
+            color: white;
+            padding: 5rem 0;
+
+        }
+
+        .pricing-section .container,
+.pricing-section .pricing-header,
+.pricing-section .pricing-grid,
+.pricing-section .price-card {
+    font-family: 'Arial', sans-serif;
+}
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        /* Section header */
+        .pricing-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .pricing-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #ffffff;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            letter-spacing: 1px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .pricing-subtitle {
+            font-size: 1.5rem;
+            color: #da9100;
+            margin-bottom: 2rem;
+        }
+
+        .opening-hours {
+            font-size: 1.2rem;
+            font-weight: 600;
+            background-color: rgba(218, 145, 0, 0.2);
+            padding: 10px 20px;
+            border-radius: 50px;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
+        .title-underline {
+            width: 80px;
+            height: 4px;
+            background: #da9100;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .title-underline:before {
+            content: "";
+            position: absolute;
+            width: 40px;
+            height: 4px;
+            background: #da9100;
+            top: -8px;
+            left: 20px;
+        }
+
+        .title-underline:after {
+            content: "";
+            position: absolute;
+            width: 40px;
+            height: 4px;
+            background: #da9100;
+            bottom: -8px;
+            left: 20px;
+        }
+
+        /* Pricing grid */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 3rem;
+        }
+
+        .price-card {
+            background-color: #1a1a1a;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .price-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .price-header {
+            background-color: #da9100;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .price-duration {
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin: 0;
+        }
+
+        .price-body {
+            padding: 30px 20px;
+            text-align: center;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .price-amount {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #da9100;
+            margin-bottom: 15px;
+        }
+
+        .price-per-month {
+            font-size: 1.1rem;
+            color: #aaa;
+            margin-bottom: 20px;
+        }
+
+        .price-features {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 25px 0;
+        }
+
+        .price-features li {
+            padding: 8px 0;
+            border-bottom: 1px solid #333;
+        }
+
+        .price-features li:last-child {
+            border-bottom: none;
+        }
+
+        /* New badge */
+        .badge-container {
+            position: absolute;
+            top: -15px;
+            right: -15px;
+            z-index: 10;
+        }
+
+        .new-badge {
+            background-color: #ff0000;
+            color: white;
+            font-weight: 700;
+            padding: 5px 10px;
+            font-size: 0.9rem;
+            border-radius: 5px;
+            transform: rotate(15deg);
+            box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+        }
+
+        /* Daily price section */
+        .daily-price-section {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 20px;
+            background-color: rgba(218, 145, 0, 0.1);
+            border-radius: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .daily-price-tag {
+            position: relative;
+            display: inline-block;
+            background-color: #da9100;
+            padding: 15px 40px;
+            border-radius: 10px;
+            transform: rotate(-5deg);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            margin: 20px 0;
+            z-index: 1;
+        }
+
+        .daily-price-tag:before {
+            content: "NEW";
+            position: absolute;
+            top: -15px;
+            left: -15px;
+            background-color: #ff0000;
+            color: white;
+            font-weight: 700;
+            padding: 5px 10px;
+            font-size: 0.9rem;
+            border-radius: 50px;
+            transform: rotate(-15deg);
+            box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+        }
+
+        .daily-price-tag h3 {
+            font-size: 1.5rem;
+            margin: 0;
+            color: #080808;
+            font-weight: 700;
+        }
+
+        .daily-price-tag .price {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #080808;
+        }
+
+        /* PT Section */
+        .pt-section {
+            text-align: center;
+            background-color: rgba(218, 145, 0, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 3rem;
+        }
+
+        .pt-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #da9100;
+        }
+
+        .pt-price {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #da9100;
+            margin-bottom: 10px;
+        }
+
+        .pt-sessions {
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: #ffffff;
+        }
+
+        /* Benefit Section */
+        .benefits-section {
+            background-color: rgba(218, 145, 0, 0.05);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+        }
+
+        .benefits-title, .services-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #da9100;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .benefits-title i, .services-title i {
+            margin-right: 10px;
+            font-size: 1.8rem;
+        }
+
+        .benefits-list, .services-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .benefits-list li, .services-list li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .benefits-list li:before, .services-list li:before {
+            content: "✓";
+            color: #da9100;
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        /* Decoration */
+        .corner-decoration {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            background-color: #da9100;
+            opacity: 0.05;
+            border-radius: 50%;
+            z-index: 0;
+        }
+
+        .top-left {
+            top: -75px;
+            left: -75px;
+        }
+
+        .bottom-right {
+            bottom: -75px;
+            right: -75px;
+        }
+
+        /* Join Us Button */
+        .join-us-btn {
+            display: inline-block;
+            background-color: #da9100;
+            color: #080808;
+            font-weight: 700;
+            padding: 15px 40px;
+            border-radius: 50px;
+            text-decoration: none;
+            text-transform: uppercase;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            margin-top: 2rem;
+            border: none;
+            cursor: pointer;
+        }
+
+        .join-us-btn:hover {
+            background-color: #ffffff;
+            color: #080808;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            transform: translateY(-3px);
+        }
+
+        /* Arrow decoration */
+        .arrow-decoration {
+            margin-top: 2rem;
+            text-align: right;
+        }
+
+        .arrow-decoration i {
+            font-size: 3rem;
+            color: #da9100;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-20px);
+            }
+            60% {
+                transform: translateY(-10px);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .pricing-title {
+                font-size: 2.2rem;
+            }
+
+            .pricing-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .pricing-section {
+                padding: 3rem 0;
+            }
+
+            .pricing-title {
+                font-size: 1.8rem;
+            }
+
+            .pricing-subtitle {
+                font-size: 1.2rem;
+            }
+
+            .pricing-grid {
+                grid-template-columns: 1fr;
+                max-width: 400px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .price-duration {
+                font-size: 1.5rem;
+            }
+
+            .price-amount {
+                font-size: 1.8rem;
+            }
+
+            .pt-title {
+                font-size: 1.5rem;
+            }
+
+            .pt-price {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .pricing-title {
+                font-size: 1.5rem;
+            }
+
+            .opening-hours {
+                font-size: 1rem;
+                padding: 8px 15px;
+            }
+
+            .daily-price-tag h3 {
+                font-size: 1.2rem;
+            }
+
+            .daily-price-tag .price {
+                font-size: 1.6rem;
+            }
+
+            .benefits-title, .services-title {
+                font-size: 1.3rem;
+            }
+
+            .join-us-btn {
+                padding: 12px 30px;
+                font-size: 1rem;
+            }
+        }

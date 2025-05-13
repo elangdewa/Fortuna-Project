@@ -10,31 +10,31 @@ class User extends Authenticatable
     use HasFactory;
 
     protected $fillable = [
-        'name', 'email', 'address', 'gender', 
-        'phone', 'role', 'is_member', 'password'
+        'name', 'email', 'address', 'gender',
+        'phone', 'role', 'is_member', 'password','profile_photo',
     ];
 
-  
+
     public function membership()
     {
         return $this->hasOne(Membership::class)->withDefault([
             'start_date' => null,
             'end_date' => null,
             'status' => 'inactive',
-        
+
         ]);
     }
-    
+
     // Untuk akses langsung ke membership type
     public function membershipType()
     {
         return $this->hasOneThrough(
             MembershipType::class,
             Membership::class,
-            'user_id', // Foreign key di tabel memberships
-            'id',      // Foreign key di tabel membership_types
-            'id',      // Local key di tabel users
-            'membership_type' // Local key di tabel memberships
+            'user_id',
+            'id',
+            'id',
+            'membership_type'
         );
     }
 

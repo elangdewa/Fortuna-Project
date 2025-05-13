@@ -40,16 +40,16 @@
     color: #080808;
     border: none;
     border-radius: 4px;
-    padding: 6px 10px; /* Diperkecil */
+    padding: 5px 8px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 15px; /* Diperkecil */
-    width: 90%;
-    font-weight: bold;
-    font-size: 0.85rem; /* Ukuran font diperkecil */
+    font-size: 0.85rem;
+    width: auto;
 }
+
+
 
 .toggle-sidebar:hover {
     background-color: #da9100;
@@ -132,11 +132,11 @@
     align-items: center;
     margin-top: auto;
     margin-bottom: 15px; /* Diperkecil */
-    font-size: 0.85rem; /* Ukuran font diperkecil */
+    font-size: 0.85rem;
 }
 
 .logout-button:hover {
-    background-color: #da9100;
+    background-color: #ffc107;
 }
 
 .sidebar.collapsed .logout-button span {
@@ -151,15 +151,15 @@
     .sidebar {
         left: -220px;
     }
-    
+
     .sidebar.mobile-visible {
         left: 0;
     }
-    
+
     .main-content {
         margin-left: 0;
     }
-    
+
     .mobile-toggle {
         display: block;
         position: fixed;

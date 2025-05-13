@@ -18,7 +18,7 @@
     left: 0;
     height: 100%;
     width: 100%;
-    background-color: rgba(1, 25, 54, 0.7); /* Semi-transparent navy */
+ background-color: rgba(8, 8, 8, 0.7);
     z-index: 1;
 }
 
@@ -70,11 +70,11 @@
 
 /* Input field styling */
 .card-body input.form-control {
-    background-color: rgba(255, 255, 255, 0.1); /* Biru transparan */
+    background-color: rgba(255, 255, 255, 0.1);
     color: white;
     border: 1px solid #fff;
     outline: none; /* Hilangkan outline biru */
-    box-shadow: none; /* Hilangkan efek shadow biru */
+    box-shadow: none; 
     border-color: #da9100; /* Opsional: Ganti dengan warna border lain */
 
 }
@@ -128,7 +128,7 @@
 }
 
 .form-control:focus {
-    background-color: #001f3f; /* Tetap biru saat fokus */
+    background-color: #080808; /* Tetap biru saat fokus */
     color: #fff;
     border-color: #da9100; /* Border emas saat fokus */
     box-shadow: none; /* Hilangkan efek shadow default */
@@ -136,13 +136,13 @@
 
 /* Dropdown (select) dengan warna biru */
 select.form-control {
-    background-color: #001f3f; /* Warna biru */
+    background-color: #080808; /* Warna biru */
     color: #fff; /* Warna teks putih */
     border: 1px solid #da9100; /* Border emas */
 }
 
 select.form-control:focus {
-    background-color: #001f3f;
+    background-color: #080808;
     color: #fff;
     border-color: #da9100;
     box-shadow: none;
@@ -150,13 +150,13 @@ select.form-control:focus {
 
 /* Textarea dengan warna biru */
 textarea.form-control {
-    background-color: #001f3f; /* Warna biru */
+    background-color: #080808; 
     color: #fff; /* Warna teks putih */
     border: 1px solid #da9100; /* Border emas */
 }
 
 textarea.form-control:focus {
-    background-color: #001f3f;
+    background-color: #080808;
     color: #fff;
     border-color: #da9100;
     box-shadow: none;

@@ -2,29 +2,52 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\PersonalTrainerOrder;
 use App\Models\PersonalTrainer;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class UserTrainerOrderController extends Controller
 {
+    public function create()
+    {
+        $trainers = PersonalTrainer::all();
+        return view('user.trainer_orders.create', compact('trainers'));
+    }
+
     public function store(Request $request)
     {
-        // Validasi input
-        $validated = $request->validate([
-            'trainer_id' => 'required|exists:personal_trainers,id',
+        $request->validate([
+            'trainer_id' => 'required|exists:personal_trainers,id', // Diubah ke personal_trainers
+            'notes' => 'nullable|string',
+            'order_date' => 'required|date',
         ]);
 
-        // Membuat pesanan baru
-        $order = new PersonalTrainerOrder();
-        $order->user_id = Auth::id(); // ID user yang sedang login
-        $order->trainer_id = $request->trainer_id;
-        $order->order_date = now(); // Tanggal pesanan
-        $order->notes = 'Pesanan baru'; // Kamu bisa sesuaikan jika ada catatan
-        $order->status = 'pending'; // Status default "pending"
-        $order->save();
+        PersonalTrainerOrder::create([
+            'user_id' => Auth::id(),
+            'trainer_id' => $request->trainer_id,
+            'notes' => $request->notes,
+            'order_date' => $request->order_date,
+            'status' => 'pending',
+        ]);
 
-        return redirect()->back()->with('success', 'Pesanan personal trainer berhasil dibuat!');
+        return redirect()->route('user.trainer')->with('success', 'Pesanan berhasil dikirim.');
     }
+
+    public function index()
+{
+    $orders = PersonalTrainerOrder::where('user_id', Auth::id())->with('trainer')->get();
+    return view('user.trainer', compact('orders'));
+}
+
+public function showTrainerPage()
+{
+    $trainers = PersonalTrainer::all();
+  $orders = PersonalTrainerOrder::where('user_id', Auth::id())
+            ->with('trainer')
+            ->latest()
+            ->get();
+
+    return view('user.trainer', compact('trainers', 'orders'));
+}
 }

@@ -1,130 +1,131 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
-@section('content')
-@include('layouts.sidenavbar')
+@section('admin-content')
+<div class="container-fluid py-4">
+    <h1 class="h3 mb-4">Dashboard</h1>
 
-{{-- <div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-10">
-            <div class="card">
-                <div class="card-header">{{ __('Admin Dashboard') }}</div>
-
+    <div class="row">
+        <!-- Members Card -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
                 <div class="card-body">
-                    @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Total Member</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $totalMembers ?? '0' }}</div>
                         </div>
-                    @endif
-                    
-                    <p>{{ __('Welcome, Admin!') }}</p>
-                    <p>You are logged in as <strong>admin</strong>.</p> 
+                        <div class="col-auto">
+                            <i class="bi bi-people fs-2 text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-                   
-                   <ul>
-                        <li><a href="#">Manage Users</a></li>
-                        <li><a href="#">Manage Classes</a></li>
-                        <li><a href="#">View Reports</a></li>
-                    </ul>
+        <!-- Trainers Card -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Total Coach</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $totalTrainers ?? '0' }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-person-badge fs-2 text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fitness Classes Card -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Kelas Fitness</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $totalFitnessClasses ?? '0' }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-bicycle fs-2 text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Membership Packages Card -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Paket Member</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $totalPackages ?? '0' }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-box-seam fs-2 text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Members Table -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Member Terbaru</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>Nama</th>
+                                    <th>Email</th>
+                                    <th>Paket</th>
+                                    <th>Tanggal Bergabung</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($recentMembers ?? [] as $member)
+                                <tr>
+                                    <td>{{ $member->name }}</td>
+                                    <td>{{ $member->email }}</td>
+                                    <td>{{ $member->package_name }}</td>
+                                    <td>{{ $member->created_at->format('d M Y') }}</td>
+                                </tr>
+                                @empty
+                                <tr>
+                                    <td colspan="4" class="text-center">Tidak ada data member</td>
+                                </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<div class="container-fluid">
-    <div class="row">
-       
-        <div class="col-md-2 sidebar d-flex flex-column align-items-center">
-            <div class="text-center mb-4">
-                <img src="https://via.placeholder.com/80" class="rounded-circle mb-2" alt="Admin">
-                <h5>Admin</h5>
-            </div>
-
-            <a href="#" class="active">Dashboard</a>
-            <a href="#">Admin Profile</a>
-            <a href="#">Lihat Member</a>
-            <a href="#">Tambah Member</a>
-            <a href="#">Paket Member</a>
-            <a href="#">Kelas Fitness</a>
-            <a href="#">Coach</a>
-
-            <button class="logout-button">Logout</button>
-        </div>
-
-  
-        <div class="col-md-10 p-4">
-            <div class="card card-custom mb-4 p-4 d-flex justify-content-between align-items-center flex-row">
-                <div>
-                    <h5>Selamat Datang, Admin!</h5>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                </div>
-                <img src="{{ asset('images/fortuna-logo.png') }}" alt="Fortuna Logo" height="50">
-            </div>
-
-            <h5 class="mb-3">Member Aktif</h5>
-            <div class="member-card mb-4">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <input type="text" class="search-bar" placeholder="Search">
-                    <i class="fas fa-search text-white"></i>
-                </div>
-                <table class="table table-borderless text-white">
-                    <thead>
-                        <tr>
-                            <th>Nama</th>
-                            <th>Tanggal Bayar</th>
-                            <th>Tanggal Berakhir</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><span class="circle"></span> James Medalla</td>
-                            <td>-</td>
-                            <td>-</td>
-                            <td><i class="fas fa-ellipsis-v"></i></td>
-                        </tr>
-                        <tr>
-                            <td><span class="circle"></span> Kent Charl Mabutas</td>
-                            <td>-</td>
-                            <td>-</td>
-                            <td><i class="fas fa-ellipsis-v"></i></td>
-                        </tr>
-                        <tr>
-                            <td><span class="circle"></span> John Elmar Rodrigo</td>
-                            <td>-</td>
-                            <td>-</td>
-                            <td><i class="fas fa-ellipsis-v"></i></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="card card-custom p-3">
-                        <div class="d-flex justify-content-between mb-3">
-                            <h6>Coaches</h6>
-                            <i class="fas fa-ellipsis-v"></i>
-                        </div>
-                        <div><span class="circle-coach"></span> Juan Dela Cruz</div>
-                        <div><span class="circle-coach"></span> Peter</div>
-                        <div><span class="circle-coach"></span> Peter</div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="card card-custom p-3">
-                        <div class="d-flex justify-content-between mb-3">
-                            <h6>Kelas Fitness</h6>
-                            <i class="fas fa-ellipsis-v"></i>
-                        </div>
-                        <div><span class="circle-coach"></span> Zumba</div>
-                        <div><span class="circle-coach"></span> Pound Fit</div>
-                        <div><span class="circle-coach"></span> Dance</div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </div>
-</div> --}}
+<style>
+.border-left-primary {
+    border-left: 4px solid #4e73df;
+}
+.border-left-success {
+    border-left: 4px solid #1cc88a;
+}
+.border-left-info {
+    border-left: 4px solid #36b9cc;
+}
+.border-left-warning {
+    border-left: 4px solid #f6c23e;
+}
+</style>
 @endsection

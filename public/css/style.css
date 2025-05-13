@@ -6,36 +6,99 @@
 
 /* Background Image */
 .bg-home {
-    background-image: url('../images/Home.jpg'); /* Sesuaikan path */
+    background-image: url('../images/Home.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    width: 100%; /* Kurangi lebar agar ada jeda kanan kiri */
-    max-width: 1200px; /* Batasi agar tidak terlalu besar di layar lebar */
-    height: 80vh; /* Kurangi tinggi agar ada jeda atas bawah */
-    max-height: 800px; /* Batasi tinggi maksimal */
-    margin: 4vh auto; /* Beri jeda atas bawah dan tengah otomatis */
-    border-radius: 30px; /* Opsional, buat sudut melengkung */
+    width: 100%;
+    max-width: 100%;
+    height: 90vh;
+    position: relative;
+    overflow: hidden;
+    margin: 0;
+    border-radius: 0;
 }
 
-/* Overlay Gelap Supaya Teks Lebih Terbaca */
 .overlay {
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5); /* Background gelap transparan */
+    background: linear-gradient(to right, rgba(0, 0, 0, 0.8) 30%, rgba(0, 0, 0, 0.4) 100%);
     display: flex;
     align-items: center;
     justify-content: flex-start;
     padding: 0 10%;
-    border-radius: 30px; /* Opsional, buat sudut melengkung */
-
+    border-radius: 0;
+    position: relative;
+    z-index: 2;
 }
 
-/* Area Konten */
-.content {
-    max-width: 450px;
+.animated-content {
+    max-width: 700px;
     color: white;
     text-align: left;
+    position: relative;
+    z-index: 3;
+}
+
+.tagline {
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #da9100;
+    margin-bottom: 1rem;
+    position: relative;
+    padding-left: 40px;
+    opacity: 1; /* Changed from 0 to 1 to ensure visibility */
+    animation: fadeInUp 0.8s forwards;
+    animation-delay: 0.2s;
+}
+
+.tagline::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 30px;
+    height: 2px;
+    background-color: #da9100;
+    transform: translateY(-50%);
+}
+
+.animated-title {
+    font-size: 3.2rem;
+    font-weight: 900;
+    line-height: 1.2;
+    margin-bottom: 1.5rem;
+    opacity: 1; /* Changed from 0 to 1 to ensure visibility */
+    animation: fadeInUp 0.8s forwards;
+    animation-delay: 0.4s;
+    text-transform: uppercase;
+}
+
+.highlight {
+    color: #da9100;
+    position: relative;
+}
+
+.animated-text {
+    font-size: 1.2rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    opacity: 1;
+    animation: fadeInUp 0.8s forwards;
+    animation-delay: 0.6s;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* Judul */
@@ -50,23 +113,6 @@ p {
     font-size: 1.2rem;
     margin-top: 10px;
 }
-
-/* Tombol */
-.buttons {
-    margin-top: 20px;
-    display: flex;
-    gap: 10px;
-}
-
-.btn {
-    padding: 12px 24px;
-    border-radius: 5px;
-    font-weight: bold;
-    text-decoration: none;
-    display: inline-block;
-    transition: 0.3s;
-}
-
 
 /* RESPONSIVE DESIGN */
 @media (max-width: 768px) {  /* Tablet & Mobile */
@@ -87,156 +133,112 @@ p {
     p {
         font-size: 1rem;
     }
-
-    .buttons {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .btn {
-        width: 100%;
-        text-align: center;
-    }
 }
 
+/* Full-width split section styling */
+.bg-half-black {
+    background-color: #080808;
+    color: white;
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    padding: 0; /* Remove padding to allow full-width elements */
+}
 
-/* Section2 */
-/* Efek Highlight pada Judul */
-/* Gaya Heading dengan Highlight */
+/* Create a full-height layout without using traditional Bootstrap grid */
+.split-section {
+    display: flex;
+    width: 100%;
+    min-height: 100vh; /* Make it take full viewport height */
+}
+
+/* Left image container taking exactly half the screen */
+.image-half {
+    width: 50%;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Make the image cover the entire left half */
+.image-half img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* This ensures the image covers the area without distortion */
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-radius: 0; /* Remove border radius for full bleed effect */
+}
+
+/* Right content container */
+.content-half {
+    width: 50%;
+    padding: 4rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* Heading styling */
 .highlighted-text {
+    color: #da9100;
     font-weight: bold;
-    font-size: 1.8rem;
+    font-size: 2.5rem;
     position: relative;
     display: inline-block;
     line-height: 1.3;
     text-transform: uppercase;
-    z-index: 0; /* Pastikan tetap di atas */
+    margin-bottom: 2rem;
 }
 
-
-/* Gaya Gambar */
-.custom-img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 15px; /* Membuat sudut melengkung */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Efek bayangan */
+/* Content styling */
+.content-half p {
+    font-size: 1.2rem;
+    line-height: 1.6;
+    margin-bottom: 0;
 }
 
-/* Responsif untuk layar kecil */
-@media (max-width: 768px) {
+/* Responsive adjustments */
+@media (max-width: 992px) {
+    .split-section {
+        flex-direction: column;
+        min-height: auto;
+    }
+
+    .image-half, .content-half {
+        width: 100%;
+    }
+
+    .image-half {
+        height: 50vh; /* Make image take half viewport height on mobile */
+    }
+
+    .content-half {
+        padding: 3rem 2rem;
+    }
+
     .highlighted-text {
-        font-size: 1.5rem; /* Ukuran lebih kecil agar tidak hilang */
-        line-height: 1.2;
-    }
-    .highlighted-text::before {
-        height: 8px; /* Kurangi ukuran highlight agar tidak menutupi teks */
+        font-size: 2rem;
     }
 }
 
-/* Styling Section */
-.about-section {
-    background-color: #080808;
-    padding: 4rem 2rem;
-    text-align: center; /* Membuat semua teks di dalamnya menjadi rata tengah */
-}
-
-/* Teks Membership */
-.about-text {
-    color: white;
-    margin-bottom: 30px;
-}
-
-/* Judul dan Deskripsi */
-.about-title {
-    font-size: 2.5rem;
-    font-weight: bold;
-}
-
-.about-description {
-    font-size: 1.1rem;
-    max-width: 600px;
-    margin: 0 auto; /* Memastikan teks tetap berada di tengah */
-}
-
-/* Layout Gambar Sejajar Vertikal */
-.about-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-/* Setiap Item */
-.about-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-bottom: 20px;
-}
-.about-item:hover {
-    transform: scale(1.05);
-    transition: transform 0.3s ease;
-}
-
-
-/* Gambar */
-.about-img {
-    width: 100%;
-    max-width: 250px;
-    height: auto;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-}
-
-/* Heading */
-.about-heading {
-    font-size: 1.4rem;
-    font-weight: bold;
-    color: white;
-    margin-top: 10px;
-}
-
-/* Button */
-.membership-btn {
-    display: inline-block;
-    background-color: #fff;
-    color: #080808;
-    font-size: 1rem;
-    font-weight: bold;
-    padding: 12px 20px;
-    border-radius: 8px;
-    text-decoration: none;
-    transition: all 0.3s ease-in-out;
-}
-
-/* Hover Effect */
-.membership-btn:hover {
-    background-color: #da9100;
-    color: #080808;
-    transform: translateY(-3px);
-    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
-}
-
-/* Responsive Fix */
-@media (min-width: 768px) { 
-    .about-content {
-        flex-direction: row; /* Untuk Desktop sejajar horizontal */
-        justify-content: space-around;
+@media (max-width: 576px) {
+    .image-half {
+        height: 40vh;
     }
 
-    /* Agar tombol tetap proporsional */
-    .membership-btn {
-        font-size: 1.2rem;
-        padding: 16px 28px;
+    .content-half {
+        padding: 2rem 1.5rem;
+    }
+
+    .highlighted-text {
+        font-size: 1.8rem;
+    }
+
+    .content-half p {
+        font-size: 1rem;
     }
 }
-
-@media (max-width: 768px) { 
-    .membership-btn {
-        width: 100%; /* Tombol menjadi penuh di mobile */
-        max-width: 300px;
-    }
-}
-
 
 /* Section4 */
 .feature-box {
@@ -246,17 +248,46 @@ p {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
     text-align: center;
-
     min-height: 200px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    margin-bottom: 24px;
+    height: 100%;
 }
 
 .feature-box:hover {
     transform: translateY(-5px);
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+.feature-icon {
+    width: 70px;
+    height: 70px;
+    background-color: #da9100;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    border-radius: 12px;
+    margin: 0 auto 25px;
+}
+
+.feature-box h3 {
+    margin-bottom: 15px;
+    font-size: 20px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.feature-box p {
+    color: #6c757d;
+    margin-bottom: 0;
 }
 
 h5 {
@@ -268,27 +299,12 @@ h5 {
     gap: 8px;
 }
 
-.icon-small {
-    font-size: 1rem;
-    color: #000;
-}
-
-/* Tambahkan margin antara baris */
-.mb-4 {
-    margin-bottom: 24px;
-}
-
-.facility-title{
-    align-items:center;
-    justify-content: center;
-}
-/* Responsive */
 @media (max-width: 768px) {
     .feature-box {
         padding: 15px;
-        min-height: 160px; /* Menyesuaikan tinggi di layar lebih kecil */
+        min-height: 160px; /* Adjusting height for smaller screens */
     }
-    h5 {
+    h5, .feature-box h3 {
         font-size: 1.1rem;
     }
     p {
@@ -296,17 +312,23 @@ h5 {
     }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 576px) {
     .feature-box {
         padding: 10px;
         text-align: center;
-        min-height: 140px; /* Menyesuaikan tinggi di layar sangat kecil */
+        min-height: 140px; /* Adjusting height for very small screens */
     }
-    h5 {
+    h5, .feature-box h3 {
         justify-content: center;
+        font-size: 1rem;
+    }
+    .feature-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 24px;
+        margin-bottom: 15px;
     }
 }
-
 
 .footer {
     background: #080808;
@@ -332,3 +354,334 @@ h5 {
 .social-icons a:hover {
     color: #ccc;
 }
+
+/* Enhanced Membership Section Styling */
+.membership-section {
+    padding: 6rem 0;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Decorative elements */
+.membership-section::before {
+    content: "";
+    position: absolute;
+    top: -50px;
+    right: -50px;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: rgba(218, 145, 0, 0.1);
+    z-index: 0;
+}
+
+.membership-section::after {
+    content: "";
+    position: absolute;
+    bottom: -80px;
+    left: -80px;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: rgba(218, 145, 0, 0.1);
+    z-index: 0;
+}
+
+/* Header styling with animation */
+.membership-header {
+    position: relative;
+    margin-bottom: 4rem;
+    z-index: 1;
+}
+
+.membership-title {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    color: #080808;
+    text-transform: uppercase;
+    position: relative;
+    display: inline-block;
+}
+
+.membership-title::after {
+    content: "";
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background: #da9100;
+    border-radius: 2px;
+}
+
+.membership-subtitle {
+    font-size: 1.2rem;
+    max-width: 700px;
+    margin: 1.5rem auto;
+    color: #495057;
+}
+
+.price-highlight {
+    color: #da9100;
+    font-weight: bold;
+}
+
+/* Card styling */
+.membership-card {
+    border: none;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    transition: all 0.4s ease;
+    height: 100%;
+    position: relative;
+    z-index: 1;
+    background: white;
+}
+
+.membership-card:hover {
+    transform: translateY(-15px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.card-img-container {
+    position: relative;
+    overflow: hidden;
+    height: 220px;
+}
+
+.membership-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.8s ease;
+}
+
+.membership-card:hover img {
+    transform: scale(1.1);
+}
+
+.card-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+    padding: 15px;
+    transition: all 0.3s ease;
+}
+
+.card-icon {
+    width: 60px;
+    height: 60px;
+    background-color: #da9100;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: -40px auto 15px;
+    box-shadow: 0 5px 15px rgba(218, 145, 0, 0.3);
+    position: relative;
+    z-index: 2;
+}
+
+.card-body {
+    padding: 2rem 1.5rem;
+    text-align: center;
+}
+
+.card-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: #212529;
+}
+
+.card-text {
+    color: #6c757d;
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+/* Feature list styling dengan ceklis lebih ke kanan */
+.feature-list {
+    padding-left: 0;
+    list-style: none;
+    margin: 1.5rem 0;
+    text-align: left;
+}
+
+.feature-list li {
+    padding: 8px 0;
+    position: relative;
+    padding-left: 50px; /* Menambah padding kiri untuk memindahkan konten ke kanan */
+    color: #495057;
+}
+
+.feature-list li:before {
+    content: "";
+    position: absolute;
+    left: 20px; /* Memindahkan ceklis lebih ke kanan */
+    top: 10px;
+    width: 18px;
+    height: 18px;
+    background-color: #da9100;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.feature-list li:after {
+    content: "✓";
+    color: white;
+    font-weight: bold;
+    position: absolute;
+    left: 24px; /* Menyesuaikan posisi ikon ceklis */
+    top: 7px;
+    font-size: 12px;
+}
+
+/* Button styling */
+.membership-btn-container {
+    text-align: center;
+    margin-top: 3rem;
+    position: relative;
+    z-index: 1;
+}
+
+.membership-btn {
+    display: inline-block;
+    background: #da9100;
+    color: white;
+    font-weight: 600;
+    padding: 15px 35px;
+    border-radius: 50px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 1rem;
+    box-shadow: 0 5px 15px rgba(218, 145, 0, 0.4);
+    position: relative;
+    overflow: hidden;
+}
+
+.membership-btn:hover {
+    background: #c58400;
+    color: white;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(218, 145, 0, 0.5);
+}
+
+.membership-btn:after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.membership-btn:hover:after {
+    width: 300px;
+    height: 300px;
+}
+
+/* Badge styling */
+.membership-badge {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: #da9100;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 50px;
+    font-weight: bold;
+    font-size: 0.8rem;
+    z-index: 2;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Animation keyframes for subtle movement */
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+}
+
+.floating {
+    animation: float 6s ease-in-out infinite;
+}
+
+/* Responsive tweaks */
+@media (max-width: 992px) {
+    .membership-title {
+        font-size: 2.5rem;
+    }
+
+    .card-img-container {
+        height: 180px;
+    }
+}
+
+@media (max-width: 768px) {
+    .membership-section {
+        padding: 4rem 0;
+    }
+
+    .membership-title {
+        font-size: 2rem;
+    }
+
+    .membership-subtitle {
+        font-size: 1rem;
+    }
+
+    .card-img-container {
+        height: 200px;
+    }
+
+    .membership-card {
+        margin-bottom: 30px;
+    }
+
+    .feature-list li {
+        padding-left: 40px; /* Sedikit mengurangi padding pada layar kecil */
+    }
+
+    .feature-list li:before {
+        left: 10px; /* Menyesuaikan posisi ceklis pada layar kecil */
+    }
+
+    .feature-list li:after {
+        left: 14px; /* Menyesuaikan posisi ikon ceklis pada layar kecil */
+    }
+}
+
+/* Untuk layar sangat kecil */
+@media (max-width: 576px) {
+    .membership-title {
+        font-size: 1.5rem;
+    }
+
+    .feature-list li {
+        padding-left: 35px; /* Lebih mengurangi padding pada layar sangat kecil */
+    }
+
+    .feature-list li:before {
+        left: 5px;
+    }
+
+    .feature-list li:after {
+        left: 9px;
+    }
+}
+

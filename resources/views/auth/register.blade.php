@@ -79,11 +79,11 @@
                         <label for="phone">Nomor Telepon</label>
                         <input id="phone" type="text" class="form-control" name="phone" required>
                     </div>
-                    
+
                     <div class="form-group mt-3">
-                      
+
                     </div>
-                    
+
                     <div class="form-group mt-3">
                         <label for="address">Alamat</label>
                         <textarea id="address" class="form-control" name="address" rows="3" required>{{ old('address') }}</textarea>
@@ -109,7 +109,7 @@
                 <h2 class="text-center mb-4">Registrasi</h2>
                 <form method="POST" action="{{ route('register') }}">
                     @csrf
-                    
+
                     <div class="row mb-3">
                         <div class="col-lg-6 col-md-6 col-sm-12 mb-3">
                             <div class="input-group">
@@ -122,7 +122,7 @@
                                 @enderror
                             </div>
                         </div>
-                        
+
                         <div class="col-lg-6 col-md-6 col-sm-12 mb-3">
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-envelope"></i></span>
@@ -148,14 +148,14 @@
                                 @enderror
                             </div>
                         </div>
-                        
+
                         <div class="col-lg-6 col-md-6 col-sm-12 mb-3">
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-lock"></i></span>
                                 <input id="password-confirm" type="password" class="form-control" name="password_confirmation" placeholder="Konfirmasi password" required autocomplete="new-password">
                             </div>
                         </div>
-                       
+
                     </div>
 
                     <div class="row mb-3">
@@ -170,7 +170,7 @@
                                 @enderror
                             </div>
                         </div>
-                    
+
                         <div class="col-lg-6 col-md-6 col-sm-12 mb-3">
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-gender-ambiguous"></i></span>
@@ -187,7 +187,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="row mb-3">
                         <div class="col-12 mb-3">
                             <div class="input-group">
@@ -212,5 +212,7 @@
     </div>
 </div>
 
+      
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 @endsection

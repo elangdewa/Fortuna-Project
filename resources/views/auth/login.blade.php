@@ -5,7 +5,7 @@
 @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</head>
+
 
 @include('layouts.navbar')
 
@@ -17,7 +17,6 @@
                 <h2 class="text-center mb-4">Login</h2>
                 <form method="POST" action="{{ route('login') }}">
                     @csrf
-                <form>
                     <div class="mb-3">
                         <label for="email" class="form-label">Email</label>
                         <div class="input-group">
@@ -51,7 +50,7 @@
                         </div>
                         @if (Route::has('password.request'))
                         <a href="{{ route('password.request') }}" class="text-decoration-none small">Lupa Password?</a>
-                    @endif
+                        @endif
                     </div>
 
                     <button type="submit" class="btn btn-primary w-100">Login</button>
@@ -61,26 +60,5 @@
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 @endsection
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        let menu = document.getElementById("mobileMenu");
-        let toggleButton = document.getElementById("menuToggle");
-
-        if (!menu || !toggleButton) {
-            console.error("Elemen menu atau tombol tidak ditemukan!");
-            return;
-        }
-
-        toggleButton.addEventListener("click", function(event) {
-            event.stopPropagation();
-            menu.classList.toggle("active");
-        });
-
-        document.addEventListener("click", function(event) {
-            if (!menu.contains(event.target) && !toggleButton.contains(event.target)) {
-                menu.classList.remove("active");
-            }
-        });
-    });
-</script>
