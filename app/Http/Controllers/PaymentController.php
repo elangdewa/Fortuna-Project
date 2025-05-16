@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Payment;
 use App\Models\Membership;
 use App\Models\MembershipType;
+use App\Models\ClassSchedule;
+use App\Models\ClassRegistration;
+use App\Models\PersonalTrainer;
+use App\Models\PersonalTrainerOrder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -12,23 +16,27 @@ use Illuminate\Support\Facades\Log;
 use Midtrans\Config;
 use Midtrans\Snap;
 use Midtrans\Notification;
+use Carbon\Carbon;
 
 class PaymentController extends Controller
 {
     public function __construct()
     {
         Config::$serverKey = config('midtrans.server_key');
+        Config::$clientKey = config('midtrans.client_key');
         Config::$isProduction = config('midtrans.is_production', false);
         Config::$isSanitized = true;
         Config::$is3ds = true;
+
+        Log::info('Midtrans configured', [
+            'is_production' => Config::$isProduction
+        ]);
     }
 
     public function createMembershipPayment(Request $request)
     {
         DB::beginTransaction();
-
         try {
-            // Validasi
             $request->validate([
                 'membership_type' => 'required|exists:membership_types,id',
             ]);
@@ -36,29 +44,29 @@ class PaymentController extends Controller
             $user = Auth::user();
             $type = MembershipType::findOrFail($request->membership_type);
 
-            // Buat membership
-            $membership = Membership::create([
-                'user_id' => $user->id,
-                'membership_type' => $type->id,
-                'price' => $type->price,
-                'status' => 'inactive',
-                'payment_status' => 'unpaid',
-            ]);
+            // Create membership
+            $membership = new Membership();
+            $membership->user_id = $user->id;
+            $membership->membership_type = $type->id;
+            $membership->price = $type->price;
+            $membership->status = 'inactive';
+            $membership->payment_status = 'unpaid';
+            $membership->save();
 
-            // Buat payment
+            // Create payment
             $transactionId = 'ORDER-' . uniqid();
-            $payment = Payment::create([
-                'user_id' => $user->id,
-                'membership_id' => $membership->id,
-                'type' => 'membership',
-                'payment_method' => 'midtrans',
-                'payment_status' => 'pending',
-                'transaction_id' => $transactionId,
-                'amount' => $type->price,
-                'reference_id' => $membership->id,
-            ]);
+            $payment = new Payment();
+            $payment->user_id = $user->id;
+            $payment->membership_id = $membership->id;
+            $payment->type = 'membership';
+            $payment->payment_method = 'midtrans';
+            $payment->payment_status = 'pending';
+            $payment->transaction_id = $transactionId;
+            $payment->amount = $type->price;
+            $payment->reference_id = $membership->id;
+            $payment->save();
 
-            // Konfigurasi transaksi Midtrans
+            // Setup Midtrans
             $params = [
                 'transaction_details' => [
                     'order_id' => $transactionId,
@@ -83,140 +91,357 @@ class PaymentController extends Controller
             return response()->json([
                 'success' => true,
                 'snap_token' => $snapToken,
-                'order_id' => $transactionId,
+                'order_id' => $transactionId
             ]);
 
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error('Error createMembershipPayment', [
-                'message' => $e->getMessage()
+            Log::error('Payment creation failed', [
+                'error' => $e->getMessage()
             ]);
             return response()->json([
                 'success' => false,
-                'message' => 'Terjadi kesalahan saat membuat pembayaran.',
+                'message' => 'Gagal membuat pembayaran: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function createTrainerPayment(Request $request)
+{
+    DB::beginTransaction();
+    try {
+        $request->validate([
+            'trainer_id' => 'required|exists:personal_trainers,id',
+            'order_date' => 'required|date|after_or_equal:today',
+        ]);
+
+        $user = Auth::user();
+        $trainer = PersonalTrainer::findOrFail($request->trainer_id);
+
+        // Create trainer order with fixed package
+        $order = PersonalTrainerOrder::create([
+            'user_id' => $user->id,
+            'trainer_id' => $trainer->id,
+            'order_date' => $request->order_date,
+            'sessions' => 10, // Fixed 10 sessions
+            'notes' => $request->notes,
+            'status' => 'pending',
+            'payment_status' => 'unpaid',
+            'total_price' => 200000, // Fixed price
+            'expires_at' => Carbon::parse($request->order_date)->addMonths(2) // Valid for 2 months
+        ]);
+
+        // Create payment record
+        $transactionId = 'TRAINER-' . uniqid();
+        $payment = Payment::create([
+            'user_id' => $user->id,
+            'type' => 'trainer_order',
+            'payment_method' => 'midtrans',
+            'payment_status' => 'pending',
+            'transaction_id' => $transactionId,
+            'amount' => 200000,
+            'reference_id' => $order->id
+        ]);
+
+        // Setup Midtrans payment
+        $params = [
+            'transaction_details' => [
+                'order_id' => $transactionId,
+                'gross_amount' => 200000,
+            ],
+            'customer_details' => [
+                'first_name' => $user->name,
+                'email' => $user->email,
+            ],
+            'item_details' => [[
+                'id' => 'PT-10',
+                'price' => 200000,
+                'quantity' => 1,
+                'name' => "Paket 10 Sesi PT with {$trainer->name}"
+            ]]
+        ];
+
+        $snapToken = Snap::getSnapToken($params);
+
+        DB::commit();
+
+        return response()->json([
+            'success' => true,
+            'snap_token' => $snapToken,
+            'order_id' => $transactionId
+        ]);
+
+    } catch (\Exception $e) {
+        DB::rollBack();
+        Log::error('Trainer payment creation failed', [
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ]);
+        return response()->json([
+            'success' => false,
+            'message' => 'Gagal membuat pembayaran: ' . $e->getMessage()
+        ], 500);
+    }
+}
+
+   public function createClassRegistrationPayment(Request $request)
+{
+    DB::beginTransaction();
+    try {
+        // Log awal request
+        Log::info('Starting class registration', [
+            'schedule_id' => $request->schedule_id,
+            'user_id' => Auth::id()
+        ]);
+
+        $request->validate([
+            'schedule_id' => 'required|exists:class_schedules,id'
+        ]);
+
+        $user = Auth::user();
+        $schedule = ClassSchedule::findOrFail($request->schedule_id);
+
+        // Log data schedule
+        Log::info('Schedule found', [
+            'schedule' => $schedule->toArray()
+        ]);
+
+        // Check if class is full
+        if ($schedule->isFull()) {
+            throw new \Exception('Kelas sudah penuh');
+        }
+
+        // Create registration dengan try-catch terpisah
+        try {
+            DB::statement("
+                INSERT INTO class_registrations
+                (user_id, class_id, schedule_id, registered_at)
+                VALUES (?, ?, ?, NOW())",
+                [$user->id, $schedule->class_id, $schedule->id]
+            );
+
+            $registration = DB::select("
+                SELECT * FROM class_registrations
+                WHERE user_id = ? AND schedule_id = ?
+                ORDER BY registered_at DESC LIMIT 1",
+                [$user->id, $schedule->id]
+            );
+
+            if (empty($registration)) {
+                throw new \Exception('Gagal membuat registrasi kelas');
+            }
+
+            $registration = $registration[0];
+
+            // Log registration berhasil
+            Log::info('Registration created', [
+                'registration_id' => $registration->id
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Failed to create registration', [
+                'error' => $e->getMessage(),
+                'sql_error' => $e->getPrevious() ? $e->getPrevious()->getMessage() : null
+            ]);
+            throw new \Exception('Gagal membuat registrasi: ' . $e->getMessage());
+        }
+
+        // Create payment dengan try-catch terpisah
+        try {
+            $transactionId = 'CLASS-' . uniqid();
+            $payment = new Payment();
+            $payment->user_id = $user->id;
+            $payment->type = 'class_registration';
+            $payment->payment_method = 'midtrans';
+            $payment->payment_status = 'pending';
+            $payment->transaction_id = $transactionId;
+            $payment->amount = $schedule->price;
+            $payment->reference_id = $registration->id;
+            $payment->save();
+
+            // Log payment berhasil
+            Log::info('Payment record created', [
+                'payment_id' => $payment->id,
+                'transaction_id' => $transactionId
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Failed to create payment record', [
+                'error' => $e->getMessage()
+            ]);
+            throw new \Exception('Gagal membuat record pembayaran');
+        }
+
+        // Setup Midtrans dengan try-catch terpisah
+        try {
+            $params = [
+                'transaction_details' => [
+                    'order_id' => $transactionId,
+                    'gross_amount' => (int) $schedule->price,
+                ],
+                'customer_details' => [
+                    'first_name' => $user->name,
+                    'email' => $user->email,
+                ],
+                'item_details' => [[
+                    'id' => $schedule->id,
+                    'price' => (int) $schedule->price,
+                    'quantity' => 1,
+                    'name' => $schedule->fitnessClass->name . ' - ' .
+                             $schedule->day_of_week . ' ' .
+                             $schedule->start_time
+                ]]
+            ];
+
+            // Log Midtrans params
+            Log::info('Midtrans params', [
+                'params' => $params
+            ]);
+
+            $snapToken = Snap::getSnapToken($params);
+
+            // Log snap token berhasil
+            Log::info('Snap token generated', [
+                'token' => $snapToken
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Failed to get snap token', [
+                'error' => $e->getMessage()
+            ]);
+            throw new \Exception('Gagal mendapatkan token pembayaran');
+        }
+
+        DB::commit();
+
+        return response()->json([
+            'success' => true,
+            'snap_token' => $snapToken,
+            'order_id' => $transactionId
+        ]);
+
+    } catch (\Exception $e) {
+        DB::rollBack();
+        Log::error('Class registration failed', [
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ]);
+        return response()->json([
+            'success' => false,
+            'message' => 'Gagal mendaftar kelas: ' . $e->getMessage()
+        ], 500);
+    }
+}
+
+    public function handleCallback(Request $request)
+    {
+        try {
+            Log::info('Callback received', [
+                'data' => $request->all()
+            ]);
+
+            $notification = new Notification();
+
+            $orderId = $notification->order_id;
+            $transactionStatus = $notification->transaction_status;
+            $fraudStatus = $notification->fraud_status;
+
+            $payment = Payment::where('transaction_id', $orderId)->first();
+            if (!$payment) {
+                throw new \Exception("Payment tidak ditemukan: $orderId");
+            }
+
+            DB::beginTransaction();
+
+            // Update payment status
+            if ($transactionStatus == 'capture') {
+                if ($fraudStatus == 'challenge') {
+                    $payment->payment_status = 'challenge';
+                } else if ($fraudStatus == 'accept') {
+                    $this->updatePaymentAndRelated($payment);
+                }
+            }
+            else if ($transactionStatus == 'settlement') {
+                $this->updatePaymentAndRelated($payment);
+            }
+            else if (in_array($transactionStatus, ['cancel', 'deny', 'expire'])) {
+                $payment->payment_status = 'failed';
+            }
+            else if ($transactionStatus == 'pending') {
+                $payment->payment_status = 'pending';
+            }
+
+            $payment->save();
+            DB::commit();
+
+            return response()->json(['status' => 'success']);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Callback failed', [
+                'error' => $e->getMessage()
+            ]);
+            return response()->json([
                 'error' => $e->getMessage()
             ], 500);
         }
     }
 
-public function handleCallback(Request $request)
-{
-    try {
-        Log::info('======== PAYMENT CALLBACK STARTED ========');
-        Log::info('Request data:', $request->all());
+    protected function updatePaymentAndRelated($payment)
+    {
+       $payment->payment_status = 'paid';
+    $payment->payment_time = now();
+    $payment->save();
 
-        // Parse notification dari Midtrans
-        $notification = new Notification();
-        $orderId = $notification->order_id;
-        $transactionStatus = $notification->transaction_status;
-        $fraudStatus = $notification->fraud_status;
+    if ($payment->type === 'class_registration') {
+        DB::statement("
+            UPDATE class_registrations
+            SET status = 'active', payment_status = 'paid'
+            WHERE id = ?",
+            [$payment->reference_id]
+        );
+    }
 
-        Log::info('Notification details:', [
-            'order_id' => $orderId,
-            'transaction_status' => $transactionStatus,
-            'fraud_status' => $fraudStatus,
-            'payment_type' => $notification->payment_type,
-            'gross_amount' => $notification->gross_amount
-        ]);
+        // Handle membership payment
+        if ($payment->type === 'membership' && $payment->membership_id) {
+            $membership = Membership::find($payment->membership_id);
+            if ($membership) {
+                $type = MembershipType::find($membership->membership_type);
+                $membership->status = 'active';
+                $membership->payment_status = 'paid';
+                $membership->start_date = now();
+                $membership->end_date = now()->addMonths($type->duration_in_months);
+                $membership->save();
+            }
+        }
+        // Handle class registration payment
+        else if ($payment->type === 'class_registration') {
+            $registration = ClassRegistration::find($payment->reference_id);
+            if ($registration) {
+                $registration->status = 'active';
+                $registration->payment_status = 'paid';
+                $registration->save();
+            }
+        }
+    }
 
-        // Cari payment berdasarkan transaction_id (order_id)
+    public function checkPaymentStatus($orderId)
+    {
         $payment = Payment::where('transaction_id', $orderId)->first();
 
         if (!$payment) {
-            Log::error('Payment not found for order_id: ' . $orderId);
-            throw new \Exception('Payment not found');
+            return response()->json([
+                'success' => false,
+                'message' => 'Payment tidak ditemukan'
+            ], 404);
         }
 
-        Log::info('Current payment status:', [
-            'payment_id' => $payment->id,
-            'current_status' => $payment->payment_status
+        return response()->json([
+            'success' => true,
+            'payment' => $payment,
+            'status' => $payment->payment_status,
+            'created_at' => $payment->created_at->format('Y-m-d H:i:s'),
+            'updated_at' => $payment->updated_at->format('Y-m-d H:i:s')
         ]);
-
-        DB::beginTransaction();
-
-        // Update payment status berdasarkan notifikasi
-        $newStatus = $payment->payment_status;
-
-        switch ($transactionStatus) {
-            case 'capture':
-                if ($fraudStatus == 'accept') {
-                    $newStatus = 'paid';
-                }
-                break;
-            case 'settlement':
-                $newStatus = 'paid';
-                break;
-            case 'pending':
-                $newStatus = 'pending';
-                break;
-            case 'deny':
-            case 'expire':
-            case 'cancel':
-                $newStatus = 'failed';
-                break;
-        }
-
-        // Update payment jika status berubah
-        if ($newStatus !== $payment->payment_status) {
-            $payment->payment_status = $newStatus;
-            $payment->payment_time = ($newStatus === 'paid') ? now() : null;
-            $payment->save();
-
-            Log::info('Payment updated:', [
-                'payment_id' => $payment->id,
-                'old_status' => $payment->getOriginal('payment_status'),
-                'new_status' => $newStatus,
-                'updated_at' => $payment->updated_at
-            ]);
-        } else {
-            Log::info('No payment status change needed');
-        }
-
-        DB::commit();
-
-        Log::info('======== PAYMENT CALLBACK COMPLETED ========');
-        return response()->json(['status' => 'success']);
-
-    } catch (\Exception $e) {
-        DB::rollBack();
-        Log::error('Callback error:', [
-            'error' => $e->getMessage(),
-            'trace' => $e->getTraceAsString()
-        ]);
-        return response()->json(['error' => $e->getMessage()], 500);
     }
-}
-// Tambahkan method baru untuk update payment dan membership
-private function updatePaymentAndMembership($payment)
-{
-    try {
-        // Update payment
-        $payment->payment_status = 'paid';
-        $payment->payment_time = now();
-        $payment->save();
-
-        // Update membership
-        if ($payment->membership_id) {
-            $membership = Membership::findOrFail($payment->membership_id);
-            $type = MembershipType::findOrFail($membership->membership_type);
-
-            $membership->status = 'active';
-            $membership->payment_status = 'paid';
-            $membership->start_date = now();
-            $membership->end_date = now()->addMonths($type->duration_in_months);
-            $membership->save();
-
-            Log::info('Membership activated', [
-                'membership_id' => $membership->id,
-                'payment_id' => $payment->id
-            ]);
-        }
-    } catch (\Exception $e) {
-        Log::error('Error updating payment and membership', [
-            'error' => $e->getMessage(),
-            'payment_id' => $payment->id
-        ]);
-        throw $e;
-    }
-}
 }

@@ -4,7 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Models\Membership; // Pastikan model Membership udah ada
 
-// Route API Membership
+
 Route::get('/memberships/{id}', function ($id) {
     $membership = Membership::find($id);
 

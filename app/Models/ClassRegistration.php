@@ -7,8 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class ClassRegistration extends Model
 {
     // Sesuaikan dengan kolom yang ada di database
-    protected $fillable = ['user_id', 'class_id', 'schedule_id', 'registered_at'];
+    protected $fillable = ['user_id', 'class_id', 'schedule_id', 'registered_at', 'status', 'payment_status'];
 
+      protected $dates = [
+        'registered_at'
+    ];
     // Jika tidak ada kolom timestamps (created_at & updated_at) di database
     public $timestamps = false;
     

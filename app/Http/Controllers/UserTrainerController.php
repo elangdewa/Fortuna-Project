@@ -12,7 +12,7 @@ class UserTrainerController extends Controller
     public function index()
     {
         $trainers = PersonalTrainer::all();
-        return view('user.trainers', compact('trainers'));
+        return view('user.trainer', compact('trainers'));
     }
 
     public function showTrainerPage()

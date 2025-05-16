@@ -132,6 +132,7 @@ Route::get('/user/home', [HomeController::class, 'index'])->name('user.home');
     // Trainer Orders
     Route::get('/user/trainer', [UserTrainerController::class, 'index'])->name('user.trainer');
     Route::post('/trainer-orders', [UserTrainerOrderController::class, 'store'])->name('user.trainer-orders.store');
+    Route::get('/user/trainer', [UserTrainerOrderController::class, 'showTrainerPage'])->name('user.trainer');
     Route::get('/user/trainer-orders', [UserTrainerOrderController::class, 'index'])->name('user.trainer-orders.index');
 });
 
@@ -147,7 +148,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/payments/verify', [PaymentController::class, 'verifyPayment'])
         ->name('payments.verify');
 
-    // Payment response routes - updated names to match the ones used in PaymentController
+
     Route::get('/payments/finish', [PaymentController::class, 'finish'])
         ->name('payments.finish');  // Changed from payment.finish to payments.finish
 
@@ -162,3 +163,17 @@ Route::middleware(['auth'])->group(function () {
 Route::post('/payments/callback', [PaymentController::class, 'handleCallback'])
     ->name('payments.callback')
     ->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+
+    Route::get('/payment/check/{orderId}', [PaymentController::class, 'checkAndUpdatePayment']);
+
+Route::get('/payment/check-status/{orderId}', [PaymentController::class, 'checkPaymentStatus']);
+Route::get('/payment/update-manual/{orderId}', [PaymentController::class, 'manualUpdatePayment']);
+Route::post('/payment/direct-update', [PaymentController::class, 'directUpdatePayment']);
+
+
+Route::middleware(['auth'])->group(function () {
+    Route::post('/payments/class-registration', [PaymentController::class, 'createClassRegistrationPayment'])
+        ->name('payments.class.registration');
+          Route::post('/payments/trainer', [PaymentController::class, 'createTrainerPayment'])
+        ->name('payments.trainer');
+});
