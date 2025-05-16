@@ -1,9 +1,10 @@
 <?php
 
 return [
-    'server_key'    => env('MIDTRANS_SERVER_KEY'),
-    'client_key'    => env('MIDTRANS_CLIENT_KEY'),
+    'server_key' => env('MIDTRANS_SERVER_KEY'),
+    'client_key' => env('MIDTRANS_CLIENT_KEY'),
     'is_production' => env('MIDTRANS_IS_PRODUCTION', false),
-    'sanitized'     => env('MIDTRANS_SANITIZED', true),
-    'enable_3ds'    => env('MIDTRANS_3DS', true),
+    'merchant_id' => env('MIDTRANS_MERCHANT_ID'),
+    'is_sanitized' => true,
+    'is_3ds' => true,
 ];

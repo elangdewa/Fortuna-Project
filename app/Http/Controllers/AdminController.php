@@ -14,20 +14,22 @@ class AdminController extends Controller
 {
      public function index()
     {
-        $data = [
-            'totalMembers' => User::where('role', 'member')->count(),
-            'totalTrainers' => PersonalTrainer::count(),
-            'totalFitnessClasses' => FitnessClass::count(),
-            'totalPackages' => MembershipType::count(),
-            'recentMembers' => User::where('role', 'member')
-                                ->latest()
-                                ->take(5)
-                                ->get()
-        ];
+     
+    $recentMembers = User::where('role', 'member')
+        ->with('membershipType')  
+        ->latest()
+        ->take(5)
+        ->get();
 
-        return view('admin.admin', $data);
+    return view('admin.admin', [
+        'totalMembers' => User::where('role', 'member')->count(),
+        'totalTrainers' => PersonalTrainer::count(),
+        'totalFitnessClasses' => FitnessClass::count(),
+        'totalPackages' => MembershipType::count(),
+        'recentMembers' => $recentMembers
+    ]);
     }
-    // List Member
+
     public function members()
     {
         return view('admin.members.view');

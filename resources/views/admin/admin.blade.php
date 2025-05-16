@@ -93,18 +93,18 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @forelse($recentMembers ?? [] as $member)
-                                <tr>
-                                    <td>{{ $member->name }}</td>
-                                    <td>{{ $member->email }}</td>
-                                    <td>{{ $member->package_name }}</td>
-                                    <td>{{ $member->created_at->format('d M Y') }}</td>
-                                </tr>
-                                @empty
-                                <tr>
-                                    <td colspan="4" class="text-center">Tidak ada data member</td>
-                                </tr>
-                                @endforelse
+                              @forelse($recentMembers as $member)
+<tr>
+    <td>{{ $member->name ?? 'N/A' }}</td>
+    <td>{{ $member->email ?? 'N/A' }}</td>
+    <td>{{ optional($member->membershipType)->name ?? 'Belum ada paket' }}</td>
+    <td>{{ optional($member->created_at)->format('d M Y') ?? 'N/A' }}</td>
+</tr>
+@empty
+<tr>
+    <td colspan="4" class="text-center">Tidak ada data member</td>
+</tr>
+@endforelse
                             </tbody>
                         </table>
                     </div>

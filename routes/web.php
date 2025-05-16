@@ -21,6 +21,8 @@ use App\Http\Controllers\Admin\FitnessScheduleController;
 use App\Http\Controllers\UserTrainerOrderController;
 use App\Http\Controllers\UserTrainerController;
 use App\Http\Controllers\FitnessRegistrationController;
+use App\Http\Controllers\PaymentController;
+
 
 
 
@@ -70,7 +72,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::put('/members/{id}', [AdminMemberController::class, 'update'])->name('admin.members.update');
     Route::delete('/members/{id}', [AdminMemberController::class, 'destroy'])->name('admin.members.destroy');
 
-    
+
 
     // Fitness Management
     Route::get('/fitness', [FitnessClassController::class, 'index'])->name('admin.fitness.index');
@@ -101,10 +103,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::post('/profile/password', [ProfileController::class, 'updatePassword'])->name('admin.profile.password');
 });
 
-// User Routes - Protected by auth middleware
+
 Route::middleware(['auth'])->group(function () {
-    Route::get('/user.home', [HomeController::class, 'index'])->name('home');
-    Route::get('/user/home', [HomeController::class, 'index'])->name('user.home');
+   Route::get('/home', [HomeController::class, 'index'])->name('home');
+Route::get('/user/home', [HomeController::class, 'index'])->name('user.home');
     Route::get('/user/member', [HomeController::class, 'member'])->name('user.member');
 
     // User Settings
@@ -114,7 +116,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/setting/password', [UserSettingsController::class, 'updatePassword'])->name('user.setting.password');
     });
 
-    // Memberships
+
     Route::post('/memberships', [MembershipController::class, 'store'])->name('memberships.store');
     Route::get('/memberships/create', [MembershipController::class, 'create'])->name('memberships.create');
     Route::get('/memberships', [MembershipController::class, 'create'])->name('membership.create');
@@ -133,7 +135,30 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/user/trainer-orders', [UserTrainerOrderController::class, 'index'])->name('user.trainer-orders.index');
 });
 
-// Payment Routes
+
+
+// Payment Routes - with auth
 Route::middleware(['auth'])->group(function () {
-    Route::get('/payment', [MidtransController::class, 'createTransaction']);
+    // Membership payment
+    Route::post('/payments/membership', [PaymentController::class, 'createMembershipPayment'])
+        ->name('payments.membership');
+
+    // Payment verification
+    Route::post('/payments/verify', [PaymentController::class, 'verifyPayment'])
+        ->name('payments.verify');
+
+    // Payment response routes - updated names to match the ones used in PaymentController
+    Route::get('/payments/finish', [PaymentController::class, 'finish'])
+        ->name('payments.finish');  // Changed from payment.finish to payments.finish
+
+    Route::get('/payments/error', [PaymentController::class, 'error'])
+        ->name('payments.error');   // Changed from payment.error to payments.error
+
+    Route::get('/payments/cancel', [PaymentController::class, 'cancel'])
+        ->name('payments.cancel');  // Changed from payment.cancel to payments.cancel
 });
+
+// Midtrans Callback - no auth required
+Route::post('/payments/callback', [PaymentController::class, 'handleCallback'])
+    ->name('payments.callback')
+    ->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);

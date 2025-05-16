@@ -6,17 +6,23 @@ use Illuminate\Database\Eloquent\Model;
 
 class Membership extends Model
 {
-    public $timestamps = true; 
-    protected $fillable = [
-        'user_id', 'membership_type', 'price', 'status',
-        'start_date', 'end_date', 'payment_status'
-    ];
+    protected $table = 'memberships';
 
+    protected $fillable = [
+        'user_id',
+        'membership_type',
+        'price',
+        'status',
+        'payment_status',
+        'start_date',
+        'end_date'
+    ];
 
     protected $casts = [
-        'start_date' => 'date',
-        'end_date' => 'date',
+        'start_date' => 'datetime',
+        'end_date' => 'datetime'
     ];
+
 
     public function user()
     {
@@ -26,5 +32,10 @@ class Membership extends Model
     public function type()
     {
         return $this->belongsTo(MembershipType::class, 'membership_type');
+    }
+
+     public function payment()
+    {
+        return $this->hasOne(Payment::class);
     }
 }

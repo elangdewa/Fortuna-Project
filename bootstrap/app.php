@@ -12,9 +12,14 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
-             'auth' => \App\Http\Middleware\Authenticate::class,
+            'auth' => \App\Http\Middleware\Authenticate::class,
             'admin' => \App\Http\Middleware\AdminMiddleware::class,
             'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+            'midtrans' => \App\Http\Middleware\MidtransMiddleware::class,
+        ]);
+
+        $middleware->validateCsrfTokens(except: [
+            'payments/callback'
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

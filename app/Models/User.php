@@ -45,5 +45,15 @@ class User extends Authenticatable
         return $this->role === 'admin';
     }
 
+    public function hasFreeFitnessClassAccess()
+{
+    $membership = $this->membership;
+
+    return $membership &&
+           $membership->membership_type === 4 && // misal ID 4 adalah 12 bulan
+           $membership->status === 'active' &&
+           $membership->payment_status === 'paid';
+}
+
 }
 
