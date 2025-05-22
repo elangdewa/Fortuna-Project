@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 
+
 @section('title', 'Register')
 
 @section('content')
@@ -212,7 +213,7 @@
     </div>
 </div>
 
-      
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 @endsection

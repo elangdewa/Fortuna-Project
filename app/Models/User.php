@@ -4,16 +4,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable; // Tambahkan ini
 
 class User extends Authenticatable
 {
-    use HasFactory;
+    use HasFactory, Notifiable; // Tambahkan Notifiable di sini
 
     protected $fillable = [
         'name', 'email', 'address', 'gender',
-        'phone', 'role', 'is_member', 'password','profile_photo',
+        'phone', 'role', 'is_member', 'password', 'profile_photo',
     ];
-
 
     public function membership()
     {
@@ -21,7 +21,6 @@ class User extends Authenticatable
             'start_date' => null,
             'end_date' => null,
             'status' => 'inactive',
-
         ]);
     }
 
@@ -38,22 +37,23 @@ class User extends Authenticatable
         );
     }
 
-
-
     public function isAdmin()
     {
         return $this->role === 'admin';
     }
 
+    public function isSuperAdmin()
+    {
+        return $this->role === 'superadmin';
+    }
+
     public function hasFreeFitnessClassAccess()
-{
-    $membership = $this->membership;
+    {
+        $membership = $this->membership;
 
-    return $membership &&
-           $membership->membership_type === 4 && // misal ID 4 adalah 12 bulan
-           $membership->status === 'active' &&
-           $membership->payment_status === 'paid';
+        return $membership &&
+            $membership->membership_type === 4 && // misal ID 4 adalah 12 bulan
+            $membership->status === 'active' &&
+            $membership->payment_status === 'paid';
+    }
 }
-
-}
-

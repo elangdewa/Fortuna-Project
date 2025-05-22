@@ -10,8 +10,8 @@
 
         <div class="card mb-4">
             <div class="card-body">
-                <h2 class="card-title" style="color: #080808;">Informasi Akun</h2>
 
+                <h2 class="card-title" style="color: #080808;">Informasi Akun</h2>
                 <div class="text-center mb-4">
                     @if($user->profile_photo)
                         <img src="{{ asset('storage/profile_photos/'.$user->profile_photo) }}"
@@ -110,6 +110,7 @@
                     </div>
                     <button type="submit" class="btn btn-warning">Ubah Password</button>
                 </form>
+                
             </div>
         </div>
     </div>

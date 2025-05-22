@@ -6,7 +6,7 @@
 
 <header class="custom-header text-white py-3">
     <div class="container d-flex align-items-center justify-content-between">
-        <a href="/">
+        <a href="/" class="logo-link">
             <img src="{{ asset('images/LOGO.png') }}" class="logo" alt="Logo">
         </a>
 
@@ -27,13 +27,13 @@
             </ul>
         </div>
 
-       
+
         <button id="menuToggle" class="d-lg-none">
             <i class="bi bi-list fs-4"></i>
         </button>
     </div>
 
-    <!-- Menu Mobile (default: hidden) -->
+
     <div class="mobile-menu" id="mobileMenu">
         <ul class="nav flex-column">
             <li class="nav-item"><a href="/Fitness" class="nav-link text-white"><i class="bi bi-lightning-fill me-2"></i>Kelas Fitness</a></li>

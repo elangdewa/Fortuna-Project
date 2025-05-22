@@ -3,18 +3,19 @@
 @section('user-content')
 <div class="container mt-5">
     <!-- Tab Navigation -->
-    <ul class="nav nav-tabs mb-4" id="trainerTabs" role="tablist">
-        <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="choose-tab" data-bs-toggle="tab" data-bs-target="#choose-trainer" type="button" role="tab">
-                Pilih Trainer
-            </button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button class="nav-link" id="orders-tab" data-bs-toggle="tab" data-bs-target="#my-orders" type="button" role="tab">
-                Pesanan Saya
-            </button>
-        </li>
-    </ul>
+  <ul class="nav nav-tabs mb-4 w-100" id="trainerTabs" role="tablist">
+    <li class="nav-item flex-fill text-center" role="presentation">
+        <button class="nav-link active flex-grow-1" id="choose-tab" data-bs-toggle="tab" data-bs-target="#choose-trainer" type="button" role="tab">
+            <i class="bi bi-person-add"></i> Pilih Trainer
+        </button>
+    </li>
+    <li class="nav-item flex-fill text-center" role="presentation">
+        <button class="nav-link flex-grow-1" id="orders-tab" data-bs-toggle="tab" data-bs-target="#my-orders" type="button" role="tab">
+            <i class="bi bi-list-columns-reverse"></i> Pesanan Saya
+        </button>
+    </li>
+</ul>
+
 
     <!-- Tab Content -->
     <div class="tab-content" id="trainerTabsContent">
@@ -23,113 +24,109 @@
             <h1 class="text-center mb-4">Pilih Personal Trainer Terbaik!</h1>
             <p class="text-center mb-5">Pilih personal trainer yang sesuai dengan kebutuhan dan tujuan fitnessmu untuk hasil yang lebih maksimal</p>
 
-            <div class="row">
-                @foreach($trainers as $trainer)
-                <div class="col-md-6 mb-4">
-                    <div class="card trainer-card">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div>
-                                    <h3 class="card-title">{{ $loop->iteration }}. {{ $trainer->name }}</h3>
-                                    <h5 class="card-subtitle mb-2">Spesialisasi</h5>
-                                </div>
-                                <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#orderModal-{{ $trainer->id }}">
-                                    Pilih Trainer
-                                </button>
-                            </div>
-                            <p class="trainer-experience">Pengalaman: {{ $trainer->experience }}</p>
-                        </div>
-                    </div>
-                </div>
+          <div class="row">
+    @foreach($trainers as $trainer)
+    <div class="col-md-6 mb-4">
+        <div class="card trainer-card shadow-sm">
 
-                <!-- Modal untuk setiap trainer -->
-                <div class="modal fade" id="orderModal-{{ $trainer->id }}" tabindex="-1">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title">Pesan Trainer {{ $trainer->name }}</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                            </div>
-                            <div class="modal-body">
-                                <form id="trainerForm-{{ $trainer->id }}">
-                                    @csrf
-                                    <input type="hidden" name="trainer_id" value="{{ $trainer->id }}">
-
-                                    <div class="mb-3">
-                                        <label class="form-label">Tanggal Mulai</label>
-                                        <input type="date" class="form-control" name="order_date" required>
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label class="form-label">Catatan Khusus</label>
-                                        <textarea class="form-control" name="notes" rows="3" placeholder="Masukkan catatan khusus untuk trainer"></textarea>
-                                    </div>
-
-                                    <div class="alert alert-info">
-                                        <p class="mb-0"><strong>Detail Paket:</strong></p>
-                                        <ul class="mb-0">
-                                            <li>10 sesi personal training</li>
-                                            <li>Durasi: 60 menit per sesi</li>
-                                            <li>Berlaku 2 bulan</li>
-                                            <li>Total: Rp 200.000</li>
-                                        </ul>
-                                    </div>
-                                </form>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                                <button type="button" class="btn btn-primary" onclick="orderTrainer({{ $trainer->id }})">
-                                    Lanjut ke Pembayaran
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                @endforeach
+            <div class="card-body">
+                <h3 class="card-title">{{ $loop->iteration }}. {{ $trainer->name }}</h3>
+                <h5 class="card-subtitle mb-2 text-muted">Spesialisasi: {{ $trainer->specialization }}</h5>
+            <p class="trainer-experience" style="color: black !important;">Pengalaman: {{ $trainer->experience }}</p>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#orderModal-{{ $trainer->id }}">
+                    Pilih Trainer
+                </button>
             </div>
         </div>
+    </div>
 
-        <!-- Tab 2: Daftar Pesanan -->
-        <div class="tab-pane fade" id="my-orders" role="tabpanel">
-            <h2 class="mb-4">Daftar Pesanan Trainer Saya</h2>
-
-            @if(session('success'))
-                <div class="alert alert-success">
-                    {{ session('success') }}
+    <!-- Modal untuk setiap trainer -->
+    <div class="modal fade" id="orderModal-{{ $trainer->id }}" tabindex="-1" aria-labelledby="orderModalLabel-{{ $trainer->id }}" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="orderModalLabel-{{ $trainer->id }}">Pesan Trainer {{ $trainer->name }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-            @endif
-
-            <div class="list-group">
-                @foreach($orders as $order)
-                <div class="list-group-item mb-3">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <h5>{{ $order->trainer->name }}</h5>
-                            <p class="mb-1">Tanggal Mulai: {{ \Carbon\Carbon::parse($order->order_date)->format('d M Y') }}</p>
-                            <p class="mb-1">Status Pembayaran:
-                                <span class="badge bg-{{ $order->payment_status === 'paid' ? 'success' : 'warning' }}">
-                                    {{ $order->payment_status === 'paid' ? 'Lunas' : 'Belum Lunas' }}
-                                </span>
-                            </p>
-                            <p class="mb-1">Status:
-                                <span class="badge bg-{{ $order->status === 'active' ? 'success' : ($order->status === 'cancelled' ? 'danger' : 'warning') }}">
-                                    {{ ucfirst($order->status) }}
-                                </span>
-                            </p>
-                            @if($order->notes)
-                                <p class="mb-0">Catatan: {{ $order->notes }}</p>
-                            @endif
+                <div class="modal-body">
+                    <form id="trainerForm-{{ $trainer->id }}">
+                        @csrf
+                        <input type="hidden" name="trainer_id" value="{{ $trainer->id }}">
+                        <div class="mb-3">
+                            <label class="form-label">Tanggal Mulai</label>
+                            <input type="date" class="form-control" name="order_date" required>
                         </div>
-                    </div>
+                        <div class="mb-3">
+                            <label class="form-label">Catatan Khusus</label>
+                            <textarea class="form-control" name="notes" rows="3" placeholder="Masukkan catatan khusus untuk trainer"></textarea>
+                        </div>
+                        <div class="alert alert-info">
+                            <p class="mb-0"><strong>Detail Paket:</strong></p>
+                            <ul class="mb-0">
+                                <li>10 sesi personal training</li>
+                                <li>Durasi: 60 menit per sesi</li>
+                                <li>Berlaku 2 bulan</li>
+                                <li>Total: Rp 200.000</li>
+                            </ul>
+                        </div>
+                    </form>
                 </div>
-                @endforeach
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-primary" onclick="orderTrainer({{ $trainer->id }})">
+                        Lanjut ke Pembayaran
+                    </button>
+                </div>
             </div>
         </div>
+    </div>
+    @endforeach
+</div>
+        </div>
+
+
+       <div class="tab-pane fade" id="my-orders" role="tabpanel">
+    <h2 class="mb-4">Daftar Pesanan Trainer Saya</h2>
+
+    @if(session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    <div class="list-group">
+        @foreach($orders as $order)
+        <div class="list-group-item mb-3">
+            <div class="d-flex justify-content-between">
+                <div>
+                    <h5>{{ $order->trainer->name }}</h5>
+                    <p class="mb-1">Tanggal Mulai: {{ \Carbon\Carbon::parse($order->order_date)->format('d M Y') }}</p>
+                    <p class="mb-1">Status Pembayaran:
+                        <span class="badge bg-{{ $order->payment_status === 'paid' ? 'success' : 'danger' }}">
+                            <i class="fas fa-{{ $order->payment_status === 'paid' ? 'check' : 'times' }}"></i>
+                            {{ $order->payment_status === 'paid' ? 'Lunas' : 'Belum Lunas' }}
+                        </span>
+                    </p>
+                    <p class="mb-1">Status:
+                        <span class="badge bg-{{ $order->status === 'active' ? 'success' : ($order->status === 'cancelled' ? 'danger' : 'warning') }}">
+                            {{ ucfirst($order->status) }}
+                        </span>
+                    </p>
+                    @if($order->notes)
+                        <p class="mb-0">Catatan: {{ $order->notes }}</p>
+                    @endif
+                </div>
+            </div>
+        </div>
+        @endforeach
+    </div>
+</div>
     </div>
 </div>
 @endsection
 
 @push('scripts')
+
 <script type="text/javascript" src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ config('midtrans.client_key') }}"></script>
 
 <script>
@@ -233,6 +230,8 @@ function orderTrainer(trainerId) {
 
 @push('styles')
 <style>
+
+
 .trainer-card {
     border-radius: 15px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -277,8 +276,8 @@ function orderTrainer(trainerId) {
 }
 
 .nav-tabs .nav-link {
-    border: none;
-    color: #6c757d;
+    background-color: #da9100 !important;
+    color: #white !important;
     font-weight: 500;
     padding: 15px 30px; /* Increase padding */
     font-size: 1.1rem; /* Larger font */
@@ -287,8 +286,9 @@ function orderTrainer(trainerId) {
 
 .nav-tabs .nav-item {
     margin-bottom: -2px;
-    min-width: 200px; /* Make tabs wider */
+    min-width: 300px; /* Make tabs wider */
     text-align: center;
+
 }
 
 .nav-tabs .nav-link:hover {
@@ -300,7 +300,7 @@ function orderTrainer(trainerId) {
 .nav-tabs .nav-link.active {
     color: #da9100;
     border-bottom: 3px solid #da9100;
-    background-color: transparent;
+
     font-weight: 600;
 }
 
@@ -315,5 +315,6 @@ function orderTrainer(trainerId) {
     height: 1rem;
     border-width: 0.2em;
 }
+
 </style>
 @endpush

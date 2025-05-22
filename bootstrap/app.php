@@ -14,8 +14,11 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'auth' => \App\Http\Middleware\Authenticate::class,
             'admin' => \App\Http\Middleware\AdminMiddleware::class,
+            'superadmin' => \App\Http\Middleware\SuperAdminMiddleware::class,
             'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
             'midtrans' => \App\Http\Middleware\MidtransMiddleware::class,
+             'prevent-back' => \App\Http\Middleware\PreventBackHistory::class,
+             'member' => \App\Http\Middleware\MemberMiddleware::class,
         ]);
 
         $middleware->validateCsrfTokens(except: [

@@ -3,28 +3,28 @@
 @section('admin-content')
 <link href="{{ asset('css/member.css') }}" rel="stylesheet">
 
-
 <div class="main-content" id="mainContent">
     <div class="container mt-5">
     <h2>Daftar Member</h2>
 
     <!-- Form Search -->
     <div class="d-flex justify-content-end mb-4">
-    <form action="{{ route('members.view') }}" method="GET" style="max-width: 400px;" class="w-100">
-        <div class="input-group">
-            <input type="text" name="search" class="form-control" placeholder="Cari nama, email, atau no telepon..." value="{{ request('search') }}">
-            <div class="input-group-append">
-                <button class="btn btn-primary" type="submit">Cari</button>
+        <form action="{{ route('members.view') }}" method="GET" style="max-width: 400px;" class="w-100">
+            <div class="input-group">
+                <input type="text" name="search" class="form-control" placeholder="Cari nama, email, atau no telepon..." value="{{ request('search') }}">
+                <div class="input-group-append">
+                    <button class="btn btn-primary" type="submit">Cari</button>
+                </div>
             </div>
-        </div>
-    </form>
-</div>
+        </form>
+    </div>
 
     <!-- Table Members -->
     <div class="table-responsive">
-        <table class="table table-bordered" style="background:white;">
+        <table class="table table-bordered">
             <thead>
                 <tr>
+                    <th>Foto</th>
                     <th>Nama</th>
                     <th>Email</th>
                     <th>Telepon</th>
@@ -39,6 +39,17 @@
             <tbody>
                 @forelse($members as $member)
                     <tr>
+                        <td class="text-center">
+                            <div class="profile-container">
+                                @if($member->profile_photo)
+                                    <img src="{{ asset('storage/profile_photos/' . $member->profile_photo) }}"
+                                         alt="{{ $member->name }}"
+                                         class="profile-image">
+                                @else
+                                    <div class="profile-initial">{{ strtoupper(substr($member->name, 0, 1)) }}</div>
+                                @endif
+                            </div>
+                        </td>
                         <td>{{ $member->name }}</td>
                         <td>{{ $member->email }}</td>
                         <td>{{ $member->phone }}</td>
@@ -65,13 +76,17 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="8" class="text-center">Tidak ada member ditemukan.</td>
+                        <td colspan="10" class="text-center">Tidak ada member ditemukan.</td>
                     </tr>
                 @endforelse
             </tbody>
         </table>
     </div>
-</div>
-</div>
 
-@endsection
+    @if(isset($members) && method_exists($members, 'links'))
+        <div class="d-flex justify-content-center mt-4">
+            {{ $members->links() }}
+        </div>
+    @endif
+</div>
+</div>

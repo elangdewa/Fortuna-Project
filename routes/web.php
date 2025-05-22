@@ -22,7 +22,9 @@ use App\Http\Controllers\UserTrainerOrderController;
 use App\Http\Controllers\UserTrainerController;
 use App\Http\Controllers\FitnessRegistrationController;
 use App\Http\Controllers\PaymentController;
-
+use App\Http\Controllers\SuperAdmin\SuperAdminController;
+use App\Http\Controllers\SuperAdmin\AdminManagementController;
+use App\Http\Controllers\SuperAdmin\SettingsController;
 
 
 
@@ -34,9 +36,7 @@ use App\Http\Controllers\PaymentController;
 |--------------------------------------------------------------------------
 */
 
-// Halaman utama
-// Halaman utama
-// Public Routes
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -51,8 +51,8 @@ Route::get('/login', [App\Http\Controllers\Auth\LoginController::class, 'showLog
 Route::post('/login', [App\Http\Controllers\Auth\LoginController::class, 'login']);
 Route::post('/logout', [App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');
 
-// Admin Routes - All admin routes protected by auth and admin middleware
-Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
+
+Route::middleware(['auth', 'admin', 'prevent-back'])->prefix('admin')->group(function () {
     Route::get('/admin', [AdminController::class, 'index'])->name('admin.dashboard');
     Route::get('/', [AdminController::class, 'index'])->name('admin.admin');
 
@@ -104,7 +104,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
 });
 
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'member', 'prevent-back'])->group(function () {
    Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::get('/user/home', [HomeController::class, 'index'])->name('user.home');
     Route::get('/user/member', [HomeController::class, 'member'])->name('user.member');
@@ -169,6 +169,7 @@ Route::post('/payments/callback', [PaymentController::class, 'handleCallback'])
 Route::get('/payment/check-status/{orderId}', [PaymentController::class, 'checkPaymentStatus']);
 Route::get('/payment/update-manual/{orderId}', [PaymentController::class, 'manualUpdatePayment']);
 Route::post('/payment/direct-update', [PaymentController::class, 'directUpdatePayment']);
+Route::get('/payment/success', [PaymentController::class, 'paymentSuccess'])->name('payment.success');
 
 
 Route::middleware(['auth'])->group(function () {
@@ -176,4 +177,23 @@ Route::middleware(['auth'])->group(function () {
         ->name('payments.class.registration');
           Route::post('/payments/trainer', [PaymentController::class, 'createTrainerPayment'])
         ->name('payments.trainer');
+});
+
+Route::middleware(['auth', 'superadmin', 'prevent-back'])->prefix('superadmin')->group(function () {
+    Route::get('/', [SuperAdminController::class, 'dashboard'])->name('superadmin.dashboard');
+
+    // Admin Management
+   Route::resource('/admins', AdminManagementController::class)->names([
+    'index' => 'superadmin.admins.index',
+    'create' => 'superadmin.admins.create',
+    'store' => 'superadmin.admins.store',
+    'show' => 'superadmin.admins.show',
+    'edit' => 'superadmin.admins.edit',
+    'update' => 'superadmin.admins.update',
+    'destroy' => 'superadmin.admins.destroy',
+]);
+
+    // System Settings
+    Route::get('/settings', [SettingsController::class, 'index'])->name('superadmin.settings.index');
+    Route::post('/settings', [SettingsController::class, 'update'])->name('superadmin.settings.update');
 });

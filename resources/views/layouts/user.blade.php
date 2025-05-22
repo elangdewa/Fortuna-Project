@@ -3,8 +3,8 @@
 
 @section('content')
     <div class="d-flex">
-        @include('layouts.usernavbar') {{-- Sidebar khusus admin --}}
-        
+        @include('layouts.usernavbar') 
+
         <div class="main-content">
             @yield('user-content') {{-- Konten halaman admin --}}
         </div>

@@ -12,24 +12,29 @@ class LoginController extends Controller
     use AuthenticatesUsers;
 
     /**
-     * Arahkan user setelah login berdasarkan role.
+     * Handle successful authentication.
      */
-    protected function redirectTo()
+    protected function authenticated(Request $request, $user)
     {
-        $user = Auth::user();
+        
+        $request->session()->regenerate();
 
-        if ($user->role === 'admin') {
-            return '/admin/admin';
+
+        $request->session()->forget('url.intended');
+
+        if ($user->role === 'superadmin') {
+            return redirect()->route('superadmin.dashboard')->with('noback', true);
+        } elseif ($user->role === 'admin') {
+            return redirect('/admin/admin')->with('noback', true);
         } elseif ($user->role === 'member') {
-            return '/home';
+            return redirect('/home')->with('noback', true);
         }
 
-        return '/';
+        return redirect('/');
     }
 
     /**
-     * Middleware guest untuk halaman login,
-     * kecuali logout yang butuh auth.
+     * Create a new controller instance.
      */
     public function __construct()
     {
@@ -37,10 +42,19 @@ class LoginController extends Controller
     }
 
     /**
-     * Setelah logout, arahkan ke halaman welcome.
+     * Handle logout redirection.
      */
-    public function loggedOut(Request $request)
+    public function logout(Request $request)
     {
-        return redirect('/');
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        // Prevent back button after logout
+        return redirect('/login')->withHeaders([
+            'Cache-Control' => 'no-cache, no-store, must-revalidate',
+            'Pragma' => 'no-cache',
+            'Expires' => '0'
+        ]);
     }
 }

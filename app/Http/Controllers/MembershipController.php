@@ -122,7 +122,7 @@ class MembershipController extends Controller
         $membership = Membership::create([
             'user_id' => $request->user_id,
             'membership_type' => $type->id,
-            'status' => 'pending_extension', // Status khusus untuk perpanjangan
+            'status' => 'pending_extension', 
             'start_date' => $activeMembership->end_date, // Mulai setelah membership aktif berakhir
             'end_date' => $activeMembership->end_date->copy()->addMonths($type->duration_in_months),
             'payment_status' => 'pending',

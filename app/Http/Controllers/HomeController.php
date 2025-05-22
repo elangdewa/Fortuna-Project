@@ -31,11 +31,15 @@ class HomeController extends Controller
      */
    public function index()
 {
-    $memberships = Membership::all();
+      $memberships = MembershipType::select('name', 'price', 'duration_in_months')
+        ->orderBy('price')
+        ->take(3)
+        ->get();
+    $types = MembershipType::all();
     $schedules = ClassSchedule::with(['fitnessClass', 'registrations'])->get();
     $trainers = PersonalTrainer::all();
 
-    return view('user.home', compact('memberships', 'schedules', 'trainers'));
+    return view('user.home', compact('memberships', 'schedules', 'trainers','types'));
 }
     public function fitness()
 {

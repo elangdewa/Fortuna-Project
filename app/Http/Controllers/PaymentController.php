@@ -17,6 +17,7 @@ use Midtrans\Config;
 use Midtrans\Snap;
 use Midtrans\Notification;
 use Carbon\Carbon;
+use Midtrans\Transaction;
 
 class PaymentController extends Controller
 {
@@ -118,7 +119,7 @@ class PaymentController extends Controller
         $user = Auth::user();
         $trainer = PersonalTrainer::findOrFail($request->trainer_id);
 
-        // Create trainer order with fixed package
+
         $order = PersonalTrainerOrder::create([
             'user_id' => $user->id,
             'trainer_id' => $trainer->id,
@@ -147,7 +148,7 @@ class PaymentController extends Controller
         $params = [
             'transaction_details' => [
                 'order_id' => $transactionId,
-                'gross_amount' => 200000,
+                'gross_amount' => 2500,
             ],
             'customer_details' => [
                 'first_name' => $user->name,
@@ -396,7 +397,8 @@ class PaymentController extends Controller
     if ($payment->type === 'class_registration') {
         DB::statement("
             UPDATE class_registrations
-            SET status = 'active', payment_status = 'paid'
+            SET status = 'active',
+            payment_status = 'paid'
             WHERE id = ?",
             [$payment->reference_id]
         );
@@ -444,4 +446,78 @@ class PaymentController extends Controller
             'updated_at' => $payment->updated_at->format('Y-m-d H:i:s')
         ]);
     }
+
+    public function paymentSuccess(Request $request)
+{
+    $orderId = $request->query('order_id'); // Pastikan order_id dikirim
+
+    Config::$serverKey = config('midtrans.server_key');
+    Config::$isProduction = false;
+
+    $status = Transaction::status($orderId);
+
+    // Pastikan status adalah object
+    if (is_array($status)) {
+        $status = (object) $status;
+    }
+
+    if (isset($status->transaction_status) && $status->transaction_status === 'settlement') {
+        $payment = Payment::where('transaction_id', $orderId)->first();
+
+        if ($payment && $payment->payment_status !== 'paid') {
+            $payment->payment_status = 'paid';
+            $payment->save();
+
+            $membership = Membership::where('user_id', $payment->user_id)->first();
+            if ($membership) {
+                $membership->status = 'active';
+                $membership->start_date = now();
+                $membership->end_date = now()->addMonths($membership->duration ?? 1);
+                $membership->payment_status = 'paid';
+                $membership->save();
+            }
+        }
+
+        return redirect('/dashboard')->with('success', 'Membership berhasil diaktifkan!');
+    }
+
+    return redirect('/dashboard')->with('error', 'Pembayaran belum selesai.');
+}
+
+public function verifyPayment(Request $request)
+{
+    $orderId = $request->input('order_id');
+
+    Config::$serverKey = config('midtrans.server_key');
+    Config::$isProduction = false;
+
+    $status = Transaction::status($orderId);
+
+    if (is_array($status)) {
+        $status = (object) $status;
+    }
+
+    if (isset($status->transaction_status) && $status->transaction_status === 'settlement') {
+        $payment = Payment::where('transaction_id', $orderId)->first();
+
+        if ($payment && $payment->payment_status !== 'paid') {
+            $payment->payment_status = 'paid';
+            $payment->save();
+
+            $membership = Membership::where('user_id', $payment->user_id)->first();
+            if ($membership) {
+                $membership->status = 'active';
+                $membership->start_date = now();
+                $membership->end_date = now()->addMonths($membership->duration ?? 1);
+                $membership->payment_status = 'paid';
+                $membership->save();
+            }
+        }
+
+        return back()->with('success', 'Membership sudah aktif!');
+    }
+
+    return back()->with('error', 'Pembayaran belum selesai.');
+}
+
 }
