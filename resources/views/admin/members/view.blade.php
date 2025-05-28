@@ -21,7 +21,7 @@
 
     <!-- Table Members -->
     <div class="table-responsive">
-        <table class="table table-bordered">
+        <table class="table table-bordered bg-danger">
             <thead>
                 <tr>
                     <th>Foto</th>

@@ -114,6 +114,7 @@
                     <div class="modal-body p-4">
                         <input type="hidden" id="userId-{{ $type->id }}" value="{{ auth()->user()->id }}">
                         <input type="hidden" id="membershipType-{{ $type->id }}" value="{{ $type->id }}">
+<input type="hidden" id="price-{{ $type->id }}" value="{{ $type->price }}">
 
                         <div class="package-summary mb-4 p-3" style="background-color: #f8f9fa; border-radius: 10px;">
                             <div class="d-flex justify-content-between mb-2">
@@ -176,23 +177,24 @@
     @endif
 </div>
 
-<!-- Success Modal -->
-<div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-0 shadow">
-            <div class="modal-body text-center p-5">
-                <div class="success-icon-container mb-4">
-                    <i class="bi bi-check-circle-fill" style="font-size: 4rem; color: #198754;"></i>
-                </div>
-                <h3 class="mb-3 fw-bold" style="color: #080808;">Pembayaran Berhasil!</h3>
-                <p class="lead mb-4">Membership Anda telah diaktifkan.</p>
-                <button type="button" class="btn btn-lg btn-membership px-5" data-bs-dismiss="modal" onclick="window.location.reload()">
-                    Tutup
-                </button>
-            </div>
+
+ @if(session('success'))
+    <div id="successModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+        <div class="bg-white rounded-lg shadow-lg p-6 max-w-sm">
+            <h3 class="text-lg font-bold text-green-600 mb-4">Pembayaran Berhasil</h3>
+            <p class="text-gray-700">{{ session('success') }}</p>
+            <button onclick="closeModal()" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+                Tutup
+            </button>
         </div>
     </div>
-</div>
+    @endif
+
+      @if(session('error'))
+        <div class="bg-red-100 text-red-800 p-4 rounded-lg mb-4">
+            {{ session('error') }}
+        </div>
+        @endif
 
 <style>
 :root {
@@ -323,164 +325,71 @@
 </style>
 
 <script>
-
-    
 function startPayment(typeId) {
-    // Check terms agreement
     if (!document.getElementById(`termsCheck-${typeId}`).checked) {
-        showToast('Harap setujui syarat dan ketentuan terlebih dahulu.', 'warning');
+        alert('Harap setujui syarat dan ketentuan terlebih dahulu.');
         return;
     }
 
-    // Disable button and show loading
     const button = document.querySelector(`#modal-${typeId} .btn-membership`);
     const originalContent = button.innerHTML;
     button.disabled = true;
     button.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Memproses...';
 
     const csrfToken = '{{ csrf_token() }}';
-    fetch("{{ route('payments.membership') }}", {
+
+    fetch("{{ route('payment.create') }}", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
             "X-CSRF-TOKEN": csrfToken,
         },
         body: JSON.stringify({
-            membership_type: typeId
+            type: 'membership',
+            reference_id: typeId,
+            amount: parseInt(document.getElementById(`price-${typeId}`).value)
         }),
     })
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Gagal membuat transaksi. Silakan coba lagi.');
+        }
+        return response.json();
+    })
     .then(data => {
-        if (data.snap_token) {
-            window.snap.pay(data.snap_token, {
+        if (data.success && data.snapToken) {
+            // Panggil Midtrans Snap untuk memulai pembayaran
+            window.snap.pay(data.snapToken, {
                 onSuccess: function(result) {
-                    // Kirim request untuk memverifikasi pembayaran
-                    fetch("{{ route('payments.verify') }}", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "X-CSRF-TOKEN": csrfToken,
-                        },
-                        body: JSON.stringify({
-                            order_id: result.order_id
-                        })
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            // Hide the current modal
-                            bootstrap.Modal.getInstance(document.getElementById(`modal-${typeId}`)).hide();
-
-                            // Show success modal
-                            var successModal = new bootstrap.Modal(document.getElementById('successModal'));
-                            successModal.show();
-
-                            // Reload after 3 seconds
-                            setTimeout(() => window.location.reload(), 3000);
-                        } else {
-                            showToast("Pembayaran berhasil tetapi terjadi kesalahan sistem. Tim kami akan memverifikasi pembayaran Anda.", "warning");
-                        }
-                    });
+                    alert('Pembayaran berhasil!');
+                    window.location.href = "{{ route('payment.status', ':orderId') }}".replace(':orderId', result.order_id);
                 },
                 onPending: function(result) {
-                    showToast("Transaksi belum selesai. Silakan selesaikan pembayaran.", "info");
+                    alert('Pembayaran belum selesai. Silakan selesaikan pembayaran.');
                 },
                 onError: function(result) {
                     console.error('Payment Error:', result);
-                    showToast("Terjadi kesalahan saat pembayaran.", "error");
+                    alert('Terjadi kesalahan saat pembayaran.');
                 },
                 onClose: function() {
-                    showToast("Kamu menutup pembayaran tanpa menyelesaikannya.", "warning");
+                    alert('Anda menutup pembayaran tanpa menyelesaikannya.');
                 }
             });
         } else {
-            showToast(data.error || "Gagal mendapatkan token pembayaran.", "error");
+            alert(data.error || 'Gagal mendapatkan token pembayaran.');
         }
     })
     .catch(error => {
-        console.error("Payment Error:", error);
-        showToast("Terjadi kesalahan dalam proses pembayaran.", "error");
+        console.error('Payment Error:', error);
+        alert('Terjadi kesalahan dalam proses pembayaran.');
     })
     .finally(() => {
-        // Re-enable button
         button.disabled = false;
         button.innerHTML = originalContent;
     });
 }
-
-// Toast notification function
-function showToast(message, type = 'info') {
-    // Check if toast container exists
-    let toastContainer = document.getElementById('toast-container');
-    if (!toastContainer) {
-        toastContainer = document.createElement('div');
-        toastContainer.id = 'toast-container';
-        toastContainer.className = 'position-fixed bottom-0 end-0 p-3';
-        toastContainer.style.zIndex = '9999';
-        document.body.appendChild(toastContainer);
-    }
-
-    // Create toast element
-    const toastId = 'toast-' + Date.now();
-    const toast = document.createElement('div');
-    toast.id = toastId;
-    toast.className = `toast align-items-center border-0`;
-    toast.setAttribute('role', 'alert');
-    toast.setAttribute('aria-live', 'assertive');
-    toast.setAttribute('aria-atomic', 'true');
-
-    // Set background color based on type
-    let iconClass = 'bi-info-circle-fill';
-    switch (type) {
-        case 'success':
-            toast.style.backgroundColor = '#198754';
-            toast.className += ' text-white';
-            iconClass = 'bi-check-circle-fill';
-            break;
-        case 'error':
-            toast.style.backgroundColor = '#dc3545';
-            toast.className += ' text-white';
-            iconClass = 'bi-exclamation-circle-fill';
-            break;
-        case 'warning':
-            toast.style.backgroundColor = '#ffc107';
-            toast.className += ' text-dark';
-            iconClass = 'bi-exclamation-triangle-fill';
-            break;
-        default:
-            toast.style.backgroundColor = '#0d6efd';
-            toast.className += ' text-white';
-    }
-
-
-    toast.innerHTML = `
-        <div class="d-flex">
-            <div class="toast-body">
-                <i class="bi ${iconClass} me-2"></i>${message}
-            </div>
-            <button type="button" class="btn-close ${type !== 'warning' ? 'btn-close-white' : ''} me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-        </div>
-    `;
-
-
-    toastContainer.appendChild(toast);
-
-    // Initialize and show toast
-    const bsToast = new bootstrap.Toast(toast, {
-        animation: true,
-        autohide: true,
-        delay: 5000
-    });
-
-    bsToast.show();
-
-    // Remove toast element after it's hidden
-    toast.addEventListener('hidden.bs.toast', function () {
-        toast.remove();
-    });
-}
-
 </script>
+
 
 <!-- Midtrans SDK -->
 <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ config('midtrans.client_key') }}"></script>

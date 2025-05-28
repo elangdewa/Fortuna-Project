@@ -85,7 +85,8 @@ Route::middleware(['auth', 'admin', 'prevent-back'])->prefix('admin')->group(fun
     Route::post('/fitness/{classId}/schedules', [FitnessScheduleController::class, 'store'])->name('admin.fitness.schedules.store');
     Route::put('/fitness/schedules/{scheduleId}', [FitnessScheduleController::class, 'update'])->name('admin.fitness.schedules.update');
     Route::delete('/fitness/schedules/{scheduleId}', [FitnessScheduleController::class, 'destroy'])->name('admin.fitness.schedules.destroy');
-
+    Route::get('/fitness/{class}/members]',[FitnessClassController::class, 'members'])
+    ->name('admin.fitness.members');
     // Trainers Management
     Route::get('/trainers', [TrainerController::class, 'index'])->name('admin.trainers.index');
     Route::post('/trainers', [TrainerController::class, 'store'])->name('admin.trainers.store');
@@ -138,46 +139,7 @@ Route::get('/user/home', [HomeController::class, 'index'])->name('user.home');
 
 
 
-// Payment Routes - with auth
-Route::middleware(['auth'])->group(function () {
-    // Membership payment
-    Route::post('/payments/membership', [PaymentController::class, 'createMembershipPayment'])
-        ->name('payments.membership');
 
-    // Payment verification
-    Route::post('/payments/verify', [PaymentController::class, 'verifyPayment'])
-        ->name('payments.verify');
-
-
-    Route::get('/payments/finish', [PaymentController::class, 'finish'])
-        ->name('payments.finish');  // Changed from payment.finish to payments.finish
-
-    Route::get('/payments/error', [PaymentController::class, 'error'])
-        ->name('payments.error');   // Changed from payment.error to payments.error
-
-    Route::get('/payments/cancel', [PaymentController::class, 'cancel'])
-        ->name('payments.cancel');  // Changed from payment.cancel to payments.cancel
-});
-
-// Midtrans Callback - no auth required
-Route::post('/payments/callback', [PaymentController::class, 'handleCallback'])
-    ->name('payments.callback')
-    ->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
-
-    Route::get('/payment/check/{orderId}', [PaymentController::class, 'checkAndUpdatePayment']);
-
-Route::get('/payment/check-status/{orderId}', [PaymentController::class, 'checkPaymentStatus']);
-Route::get('/payment/update-manual/{orderId}', [PaymentController::class, 'manualUpdatePayment']);
-Route::post('/payment/direct-update', [PaymentController::class, 'directUpdatePayment']);
-Route::get('/payment/success', [PaymentController::class, 'paymentSuccess'])->name('payment.success');
-
-
-Route::middleware(['auth'])->group(function () {
-    Route::post('/payments/class-registration', [PaymentController::class, 'createClassRegistrationPayment'])
-        ->name('payments.class.registration');
-          Route::post('/payments/trainer', [PaymentController::class, 'createTrainerPayment'])
-        ->name('payments.trainer');
-});
 
 Route::middleware(['auth', 'superadmin', 'prevent-back'])->prefix('superadmin')->group(function () {
     Route::get('/', [SuperAdminController::class, 'dashboard'])->name('superadmin.dashboard');
@@ -197,3 +159,13 @@ Route::middleware(['auth', 'superadmin', 'prevent-back'])->prefix('superadmin')-
     Route::get('/settings', [SettingsController::class, 'index'])->name('superadmin.settings.index');
     Route::post('/settings', [SettingsController::class, 'update'])->name('superadmin.settings.update');
 });
+
+
+Route::middleware(['auth'])->group(function () {
+    Route::post('/payment/create', [PaymentController::class, 'createTransaction'])->name('payment.create');
+    Route::get('/payment/status/{orderId}', [PaymentController::class, 'checkStatus'])->name('payment.status');
+    Route::get('/payment/check/{paymentId}', [PaymentController::class, 'checkPaymentStatus'])->name('payment.check');
+
+});
+
+Route::post('/midtrans/notification', [PaymentController::class, 'notificationHandler']);

@@ -11,7 +11,7 @@
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addClassModal">
             Tambah Kelas Baru
         </button>
-    
+
     </div>
 
     @if(session('success'))
@@ -42,30 +42,33 @@
                                     <td>{{ $class->id }}</td>
                                     <td>{{ $class->class_name }}</td>
                                     <td>{{ Str::limit($class->description, 50) }}</td>
-                                   
+
                                     <td>{{ $class->capacity }}</td>
                                     <td>
                                         <button class="btn btn-warning btn-sm edit-btn"
-                                            data-id="{{ $class->id }}"
-                                            data-class_name="{{ $class->class_name }}"
-                                            data-description="{{ $class->description }}"
-                                          
-                                            data-capacity="{{ $class->capacity }}"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#editClassModal">
-                                            Edit
-                                        </button>
+        data-id="{{ $class->id }}"
+        data-class_name="{{ $class->class_name }}"
+        data-description="{{ $class->description }}"
+        data-capacity="{{ $class->capacity }}"
+        data-bs-toggle="modal"
+        data-bs-target="#editClassModal">
+        Edit
+    </button>
 
-                                        <a href="{{ route('admin.fitness.schedules.index', $class->id) }}" class="btn btn-info btn-sm mt-1">
-                                            Kelola Jadwal
-                                        </a>
-                                        
-                                        <form action="{{ route('admin.fitness.destroy', $class->id) }}" method="POST">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus kelas ini?')">Hapus</button>
-                                        </form>
-                                    </td>
+    <a href="{{ route('admin.fitness.schedules.index', $class->id) }}" class="btn btn-info btn-sm mt-1">
+        Kelola Jadwal
+    </a>
+
+    <a href="{{ route('admin.fitness.members', $class->id) }}" class="btn btn-primary btn-sm mt-1">
+        Lihat Member
+    </a>
+
+    <form action="{{ route('admin.fitness.destroy', $class->id) }}" method="POST">
+        @csrf
+        @method('DELETE')
+        <button type="submit" class="btn btn-danger btn-sm mt-1" onclick="return confirm('Apakah Anda yakin ingin menghapus kelas ini?')">Hapus</button>
+    </form>
+</td>
                                 </tr>
                             @endforeach
                         @else
@@ -103,7 +106,7 @@
                         <label for="description" class="form-label">Deskripsi</label>
                         <textarea class="form-control" id="description" name="description" rows="3"></textarea>
                     </div>
-                    
+
                     <div class="mb-3">
                         <label for="capacity" class="form-label">Kapasitas</label>
                         <input type="number" class="form-control" id="capacity" name="capacity" required>
@@ -138,7 +141,7 @@
                         <label for="edit_description" class="form-label">Deskripsi</label>
                         <textarea class="form-control" id="edit_description" name="description" rows="3"></textarea>
                     </div>
-                   
+
                     <div class="mb-3">
                         <label for="edit_capacity" class="form-label">Kapasitas</label>
                         <input type="number" class="form-control" id="edit_capacity" name="capacity" required>
@@ -167,13 +170,13 @@
                     const id = this.getAttribute('data-id');
                     const className = this.getAttribute('data-class_name');
                     const description = this.getAttribute('data-description');
-                   
+
                     const capacity = this.getAttribute('data-capacity');
 
                     // Set nilai form
                     document.getElementById('edit_class_name').value = className;
                     document.getElementById('edit_description').value = description;
-                  
+
                     document.getElementById('edit_capacity').value = capacity;
 
                     // Set action form

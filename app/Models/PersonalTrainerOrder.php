@@ -10,17 +10,10 @@ class PersonalTrainerOrder extends Model
     public $timestamps = false; // Nonaktifkan timestamp
     use HasFactory;
 
-    protected $fillable = [
-        'user_id',
-        'trainer_id',
-        'order_date',
-        'notes',
-        'status',
-        'sessions',
-        'payment_status',
-        'total_price',
-        'expires_at'
-    ];
+  protected $fillable = [
+    'user_id', 'trainer_id', 'order_date', 'notes', 'sessions',
+    'status', 'total_price', 'payment_status', 'expires_at'
+];
 
      protected $dates = [
         'order_date',

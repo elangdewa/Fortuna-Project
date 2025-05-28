@@ -16,6 +16,8 @@ class FitnessClass extends Model
         'capacity'
     ];
 
+     public $timestamps = false;
+
     public function schedules()
     {
         return $this->hasMany(ClassSchedule::class, 'class_id');

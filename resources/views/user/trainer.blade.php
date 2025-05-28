@@ -156,34 +156,108 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function orderTrainer(trainerId) {
-    if (typeof window.snap === 'undefined') {
-        console.error('Midtrans Snap belum dimuat');
-        alert('Sistem pembayaran belum siap. Mohon muat ulang halaman.');
-        return;
-    }
-
     const form = document.getElementById(`trainerForm-${trainerId}`);
     const button = event.target;
+    const formData = new FormData(form);
 
     button.disabled = true;
     button.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Memproses...';
 
-    const formData = new FormData(form);
-    const data = {
-        trainer_id: formData.get('trainer_id'),
-        order_date: formData.get('order_date'),
-        notes: formData.get('notes'),
-        sessions: 10,
-        price: 200000
-    };
-
-    fetch("{{ route('payments.trainer') }}", {
+    // 1. Buat order personal trainer dulu
+    fetch("{{ route('user.trainer-orders.store') }}", {
         method: "POST",
         headers: {
             "X-CSRF-TOKEN": "{{ csrf_token() }}",
             "Content-Type": "application/json",
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify({
+            trainer_id: formData.get('trainer_id'),
+            order_date: formData.get('order_date'),
+            notes: formData.get('notes')
+        })
+    })
+    .then(async response => {
+        const contentType = response.headers.get("content-type");
+        if (!response.ok) {
+            const text = await response.text();
+            throw new Error(text);
+        }
+        if (contentType && contentType.indexOf("application/json") !== -1) {
+            return response.json();
+        } else {
+            const text = await response.text();
+            throw new Error(text);
+        }
+    })
+    .then(orderRes => {
+        if (!orderRes.success || !orderRes.order) throw new Error('Gagal membuat order trainer');
+        // 2. Setelah order berhasil, lakukan pembayaran
+        return fetch("{{ route('payment.create') }}", {
+            method: "POST",
+            headers: {
+                "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                type: "personal_trainer",
+                reference_id: orderRes.order.id, // gunakan id order yang baru dibuat
+                amount: 200000,
+                trainer_id: formData.get('trainer_id'),
+                session_date: formData.get('order_date'),
+                notes: formData.get('notes')
+            })
+        });
+    })
+    .then(async response => {
+        const contentType = response.headers.get("content-type");
+        if (!response.ok) {
+            const text = await response.text();
+            throw new Error(text);
+        }
+        if (contentType && contentType.indexOf("application/json") !== -1) {
+            return response.json();
+        } else {
+            const text = await response.text();
+            throw new Error(text);
+        }
+    })
+    .then(data => {
+        if (data.success && data.snapToken) {
+            window.snap.pay(data.snapToken, {
+                onSuccess: function(result) {
+                    checkPaymentStatus(data.orderId);
+                },
+                onPending: function(result) {
+                    alert('Silakan selesaikan pembayaran Anda');
+                    resetButton(button);
+                },
+                onError: function(result) {
+                    alert('Pembayaran gagal, silakan coba lagi');
+                    resetButton(button);
+                },
+                onClose: function() {
+                    resetButton(button);
+                }
+            });
+        } else {
+            throw new Error(data.message || 'Gagal memulai pembayaran');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert(error.message || 'Terjadi kesalahan sistem');
+        resetButton(button);
+    });
+}
+
+function checkPaymentStatus(orderId) {
+    // Use the correct route for checking payment status
+    fetch(`{{ url('/payment/check') }}/${orderId}`, {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        }
     })
     .then(response => {
         if (!response.ok) {
@@ -192,38 +266,36 @@ function orderTrainer(trainerId) {
         return response.json();
     })
     .then(data => {
-        if (data.success && data.snap_token) {
-            window.snap.pay(data.snap_token, {
-                onSuccess: function(result) {
-                    localStorage.setItem('activeTab', '#my-orders');
-                    window.location.reload();
-                },
-                onPending: function(result) {
-                    alert('Silakan selesaikan pembayaran Anda');
-                    button.disabled = false;
-                    button.innerHTML = 'Lanjut ke Pembayaran';
-                },
-                onError: function(result) {
-                    console.error('Payment error:', result);
-                    alert('Pembayaran gagal, silakan coba lagi');
-                    button.disabled = false;
-                    button.innerHTML = 'Lanjut ke Pembayaran';
-                },
-                onClose: function() {
-                    button.disabled = false;
-                    button.innerHTML = 'Lanjut ke Pembayaran';
-                }
-            });
+        console.log('Payment status response:', data);
+
+        if (data.success) {
+            if (data.payment_status === 'paid') {
+                alert('Pembayaran berhasil!');
+                // Redirect to orders tab
+                window.location.href = window.location.pathname + '?tab=my-orders';
+                window.location.reload();
+            } else if (data.payment_status === 'pending') {
+                setTimeout(() => checkPaymentStatus(orderId), 3000);
+            } else {
+                alert(data.message || 'Status pembayaran: ' + data.payment_status);
+                window.location.reload();
+            }
         } else {
-            throw new Error(data.message || 'Terjadi kesalahan sistem');
+            throw new Error(data.message || 'Status pembayaran tidak valid');
         }
     })
     .catch(error => {
-        console.error('Error:', error);
-        alert(error.message || 'Terjadi kesalahan sistem');
-        button.disabled = false;
-        button.innerHTML = 'Lanjut ke Pembayaran';
+        console.error('Status check error:', error);
+        // Don't show error alert if payment is successful
+        if (!document.hidden) {
+            alert('Gagal memeriksa status pembayaran: ' + error.message);
+        }
     });
+}
+
+function resetButton(button) {
+    button.disabled = false;
+    button.innerHTML = 'Lanjut ke Pembayaran';
 }
 </script>
 @endpush

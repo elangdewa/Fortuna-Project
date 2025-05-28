@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\FitnessClass;
-
+use App\Models\ClassRegistration;
 use App\Models\PersonalTrainer;
 use Illuminate\Http\Request;
 
@@ -16,7 +16,7 @@ class FitnessClassController extends Controller
     {
         $classes = FitnessClass::all();
 
-        
+
         return view('admin.fitness.fitness', [
             'classes' => $classes
         ]);
@@ -27,12 +27,12 @@ class FitnessClassController extends Controller
     $request->validate([
         'class_name' => 'required|string|max:255',
         'description' => 'nullable|string',
-       
+
         'capacity' => 'required|integer|min:1',
     ]);
 
     FitnessClass::create($request->all());
-    
+
     return redirect()->route('admin.fitness.index')
     ->with('success', 'Kelas fitness berhasil ditambahkan!');
 }
@@ -44,7 +44,7 @@ public function update(Request $request, $id)
     $request->validate([
         'class_name' => 'required|string|max:255',
         'description' => 'nullable|string',
-       
+
         'capacity' => 'required|integer|min:1',
     ]);
 
@@ -61,6 +61,17 @@ public function destroy($id)
 
     return redirect()->route('admin.fitness.index')
     ->with('success', 'Kelas fitness berhasil ditambahkan!');
+}
+
+public function members(FitnessClass $class)
+{
+    $registrations = ClassRegistration::with(['user', 'schedule'])
+        ->where('class_id', $class->id)  // Changed: directly query class_id
+        ->where('payment_status', 'paid')
+        ->orderBy('registered_at', 'desc')
+        ->get();
+
+    return view('admin.fitness.members', compact('class', 'registrations'));
 }
 
 }

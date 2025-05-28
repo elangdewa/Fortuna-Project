@@ -90,8 +90,18 @@
         </div>
     </div>
 
-    
+    <!-- Grafik Statistik -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Statistik Umum</h6>
+        </div>
+        <div class="card-body">
+            <canvas id="dashboardChart"></canvas>
+        </div>
+    </div>
+</div>
 
+<!-- Custom CSS -->
 <style>
 .border-left-primary {
     border-left: 4px solid #4e73df;
@@ -112,4 +122,55 @@
     border-left: 4px solid #343a40;
 }
 </style>
+
+<!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Chart Script -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const ctx = document.getElementById('dashboardChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Users', 'Members', 'Coaches', 'Memberships', 'Classes', 'Packages'],
+            datasets: [{
+                label: 'Jumlah',
+                data: [
+                    {{ $totalUsers }},
+                    {{ $totalMembers }},
+                    {{ $totalTrainers }},
+                    {{ $activeMemberships }},
+                    {{ $totalFitnessClasses }},
+                    {{ $totalPackages }}
+                ],
+                backgroundColor: [
+                    '#4e73df',
+                    '#1cc88a',
+                    '#36b9cc',
+                    '#f6c23e',
+                    '#858796',
+                    '#343a40'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false },
+                title: {
+                    display: true,
+                    text: 'Statistik Data Dashboard'
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+});
+</script>
 @endsection

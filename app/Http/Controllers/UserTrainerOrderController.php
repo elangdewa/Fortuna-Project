@@ -15,24 +15,27 @@ class UserTrainerOrderController extends Controller
         return view('user.trainer_orders.create', compact('trainers'));
     }
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'trainer_id' => 'required|exists:personal_trainers,id', // Diubah ke personal_trainers
-            'notes' => 'nullable|string',
-            'order_date' => 'required|date',
-        ]);
+   public function store(Request $request)
+{
+    $request->validate([
+        'trainer_id' => 'required|exists:personal_trainers,id',
+        'notes' => 'nullable|string',
+        'order_date' => 'required|date',
+    ]);
 
-        PersonalTrainerOrder::create([
-            'user_id' => Auth::id(),
-            'trainer_id' => $request->trainer_id,
-            'notes' => $request->notes,
-            'order_date' => $request->order_date,
-            'status' => 'pending',
-        ]);
+    $order = PersonalTrainerOrder::create([
+        'user_id' => Auth::id(),
+        'trainer_id' => $request->trainer_id,
+        'notes' => $request->notes,
+        'sessions' => 10,
+        'order_date' => $request->order_date,
+        'status' => 'pending',
+        'total_price' => 200000,
+        'payment_status' => 'unpaid'
+    ]);
 
-        return redirect()->route('user.trainer')->with('success', 'Pesanan berhasil dikirim.');
-    }
+    return response()->json(['success' => true, 'order' => $order]);
+}
 
     public function index()
 {

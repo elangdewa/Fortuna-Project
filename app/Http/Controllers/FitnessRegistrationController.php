@@ -30,49 +30,49 @@ class FitnessRegistrationController extends Controller
         ]);
     }
     
-    public function store(Request $request)
-    {
-        $request->validate([
-            'schedule_id' => 'required|exists:class_schedules,id',
+  public function store(Request $request)
+{
+    $request->validate([
+        'schedule_id' => 'required|exists:class_schedules,id',
+    ]);
+
+    return DB::transaction(function() use ($request) {
+        $schedule = ClassSchedule::with('fitnessClass')
+            ->lockForUpdate()
+            ->findOrFail($request->schedule_id);
+
+        $currentRegistrations = $schedule->registrations()->count();
+        $capacity = $schedule->effective_capacity;
+
+        if ($currentRegistrations >= $capacity) {
+            // Return JSON error
+            return response()->json(['success' => false, 'message' => 'Maaf, kuota kelas sudah penuh.'], 422);
+        }
+
+        if ($schedule->isRegisteredBy(Auth::id())) {
+            // Return JSON error
+            return response()->json(['success' => false, 'message' => 'Anda sudah terdaftar di kelas ini.'], 422);
+        }
+
+        $registration = ClassRegistration::create([
+            'user_id' => Auth::id(),
+            'class_id' => $schedule->class_id,
+            'schedule_id' => $request->schedule_id,
+            'registered_at' => now(),
+            'payment_status' => 'unpaid',
+            'status' => 'pending',
         ]);
 
-        // Mulai transaksi database untuk mencegah race condition
-        return DB::transaction(function() use ($request) {
-            // Ambil jadwal dengan locking untuk update (mencegah konflik kuota)
-            $schedule = ClassSchedule::with('fitnessClass')
-                ->lockForUpdate()
-                ->findOrFail($request->schedule_id);
-            
-            // Hitung jumlah pendaftar saat ini
-            $currentRegistrations = $schedule->registrations()->count();
-            
-            // Ambil kapasitas efektif (dari schedule atau class)
-            $capacity = $schedule->effective_capacity;
-            
-            // Cek apakah kuota masih tersedia
-            if ($currentRegistrations >= $capacity) {
-                return redirect()->back()->with('error', 'Maaf, kuota kelas sudah penuh.');
-            }
-            
-            // Cek apakah user sudah terdaftar di jadwal ini
-            if ($schedule->isRegisteredBy(Auth::id())) {
-                return redirect()->back()->with('error', 'Anda sudah terdaftar di kelas ini.');
-            }
-            
-            // Buat pendaftaran baru
-            ClassRegistration::create([
-                'user_id' => Auth::id(),
-                'class_id' => $schedule->class_id,
-                'schedule_id' => $request->schedule_id,
-                'registered_at' => Carbon::now(),
-            ]);
-            
-            $remainingSlots = $capacity - $currentRegistrations - 1;
-            
-            return redirect()->route('user.fitness')->with('success', 
-                'Pendaftaran berhasil! Kuota tersisa: ' . $remainingSlots);
-        });
-    }
+        $remainingSlots = $capacity - $currentRegistrations - 1;
+
+        // Return JSON success
+        return response()->json([
+            'success' => true,
+            'registration' => $registration,
+            'remaining_slots' => $remainingSlots
+        ]);
+    });
+}
     
     // Jika ingin menambahkan fitur pembatalan pendaftaran
     public function cancel(Request $request, $registrationId)
