@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/username/fortuna-fitness.git'
+                git 'https://github.com/elangdewa/Fortuna-Project.git'
             }
         }
 
