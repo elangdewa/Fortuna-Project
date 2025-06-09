@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void
     {
-        Schema::create('class_schedules', function (Blueprint $table) {
+       Schema::create('class_schedules', function (Blueprint $table) {
     $table->id();
     $table->foreignId('class_id')->nullable()->constrained('fitness_classes')->nullOnDelete();
     $table->text('description')->nullable();

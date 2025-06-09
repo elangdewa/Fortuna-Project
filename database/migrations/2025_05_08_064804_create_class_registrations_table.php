@@ -11,7 +11,7 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('class_id')->nullable()->constrained('fitness_classes')->nullOnDelete();
-            $table->foreignId('schedule_id')->nullable()->constrained('class_schedules')->nullOnDelete();
+$table->foreignId('schedule_id')->nullable()->constrained('class_schedules')->nullOnDelete();
             $table->timestamp('registered_at')->useCurrent();
             $table->enum('payment_status', ['unpaid', 'paid', 'failed'])->default('unpaid');
             $table->enum('status', ['pending', 'active', 'cancelled'])->default('pending');
