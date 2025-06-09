@@ -7,20 +7,16 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void
     {
-        Schema::create('class_registrations', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('user_id')->nullable();
-            $table->unsignedBigInteger('class_id')->nullable();
-            $table->unsignedBigInteger('schedule_id')->nullable();
-            $table->timestamp('registered_at')->useCurrent();
-            $table->enum('payment_status', ['unpaid', 'paid', 'failed'])->default('unpaid');
-            $table->enum('status', ['pending', 'active', 'cancelled'])->default('pending');
-            $table->timestamps();
+      Schema::create('class_registrations', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
+    $table->foreignId('class_id')->nullable()->constrained('fitness_classes')->nullOnDelete();
+    $table->foreignId('schedule_id')->nullable()->constrained('class_schedules')->nullOnDelete();
+    $table->timestamp('registered_at')->useCurrent();
+    $table->enum('payment_status', ['unpaid', 'paid', 'failed'])->default('unpaid');
+    $table->enum('status', ['pending', 'active', 'cancelled'])->default('pending');
+});
 
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
-            $table->foreign('class_id')->references('id')->on('fitness_classes')->onDelete('set null');
-            $table->foreign('schedule_id')->references('id')->on('class_schedules')->onDelete('set null');
-        });
     }
 
     public function down(): void

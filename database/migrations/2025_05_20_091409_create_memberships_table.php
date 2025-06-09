@@ -7,18 +7,18 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void
     {
-        Schema::create('memberships', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->string('membership_type');
-            $table->enum('status', ['active', 'inactive']);
-            $table->date('start_date');
-            $table->date('end_date');
-            $table->enum('payment_status', ['paid', 'unpaid']);
-            $table->timestamps();
+      Schema::create('memberships', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
+    $table->string('membership_type', 100)->nullable();
+    $table->decimal('price', 10, 2)->nullable();
+    $table->enum('status', ['active', 'inactive'])->nullable();
+    $table->date('start_date')->nullable();
+    $table->date('end_date')->nullable();
+    $table->enum('payment_status', ['paid', 'unpaid'])->nullable();
+    $table->timestamps();
+});
 
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-        });
     }
 
     public function down(): void
