@@ -1,17 +1,21 @@
 pipeline {
     agent any
 
+    environment {
+        APP_ENV = 'testing'
+    }
+
     stages {
         stage('Checkout') {
             steps {
-                checkout scm
+                git 'https://github.com/username/fortuna-fitness.git'
             }
         }
 
         stage('Install Dependencies') {
             steps {
-                sh 'composer install --no-interaction'
-                sh 'cp .env.example .env || true'
+                sh 'composer install'
+                sh 'cp .env.example .env'
                 sh 'php artisan key:generate'
             }
         }
@@ -20,6 +24,15 @@ pipeline {
             steps {
                 sh './vendor/bin/phpunit'
             }
+        }
+    }
+
+    post {
+        success {
+            echo 'Build & Test Sukses!'
+        }
+        failure {
+            echo 'Build Gagal!'
         }
     }
 }
