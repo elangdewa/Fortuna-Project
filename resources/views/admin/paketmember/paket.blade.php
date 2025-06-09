@@ -1,67 +1,92 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
-@section('content')
-<link href="{{ asset('css/member.css') }}" rel="stylesheet">
-@include('layouts.sidenavbar')
+@section('admin-content')
+<link href="{{ asset('css/tableadmin.css') }}" rel="stylesheet">
 
-<div class="container mt-5">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>Paket Membership</h2>
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addPaketModal">
-            Tambah Paket Baru
-        </button>
-    </div>
+<div class="main-content" id="mainContent">
+    <div class="container-fluid px-0">
 
-    @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
-    @endif
+        <div class="page-header mb-3 ps-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2 class="page-title mb-0">
+                    <i class="fas fa-ticket-alt me-2"></i>
+                    Paket Membership
+                </h2>
+                <button type="button" class="btn btn-primary-custom" data-bs-toggle="modal" data-bs-target="#addPaketModal">
+                    <i class="fas fa-plus me-1"></i>Tambah Paket
+                </button>
+            </div>
+        </div>
 
-    @if(session('error'))
-        <div class="alert alert-danger">{{ session('error') }}</div>
-    @endif
+        @if(session('success'))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
 
-    <!-- Table untuk menampilkan data paket -->
-    <div class="card">
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Nama Paket</th>
-                            <th>Harga</th>
-                            <th>Durasi (Bulan)</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($membershipTypes as $type)
+        @if(session('error'))
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                {{ session('error') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+
+        <!-- Table Card -->
+        <div class="card">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
                             <tr>
-                                <td>{{ $type->id }}</td>
-                                <td>{{ $type->name }}</td>
-                                <td>Rp {{ number_format($type->price) }}</td>
-                                <td>{{ $type->duration_in_months }}</td>
-                                <td>
-                                    <button class="btn btn-warning btn-sm edit-btn" 
-                                        data-id="{{ $type->id }}"
-                                        data-name="{{ $type->name }}"
-                                        data-price="{{ $type->price }}"
-                                        data-duration="{{ $type->duration_in_months }}"
-                                        data-bs-toggle="modal" 
-                                        data-bs-target="#editPaketModal">
-                                        Edit
-                                    </button>
-                                   <!-- Corrected Delete Form -->
-<form action="{{ route('admin.paketmember.destroy', $type->id) }}" method="POST" class="d-inline">
-    @csrf
-    @method('DELETE')
-    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus paket ini?')">Hapus</button>
-</form>
-                                </td>
+                                <th class="text-center" style="width: 60px">ID</th>
+                                <th style="width: 200px">Nama Paket</th>
+                                <th style="width: 150px">Harga</th>
+                                <th style="width: 120px">Durasi</th>
+                                <th style="width: 120px" class="text-center">Aksi</th>
                             </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @forelse($membershipTypes as $type)
+                                <tr>
+                                    <td class="text-center">{{ $type->id }}</td>
+                                    <td>{{ $type->name }}</td>
+                                    <td>Rp {{ number_format($type->price, 0, ',', '.') }}</td>
+                                    <td>{{ $type->duration_in_months }} Bulan</td>
+                                    <td>
+                                        <button class="btn btn-warning btn-sm edit-btn"
+                                            data-id="{{ $type->id }}"
+                                            data-name="{{ $type->name }}"
+                                            data-price="{{ $type->price }}"
+                                            data-duration="{{ $type->duration_in_months }}"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#editPaketModal">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </button>
+                                        <form action="{{ route('admin.paketmember.destroy', $type->id) }}" method="POST" class="d-inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus paket ini?')">
+                                                            <i class="bi bi-trash-fill"></i>
+
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="5" class="text-center py-4">
+                                        <div class="empty-state">
+                                            <i class="fas fa-ticket-alt text-muted mb-2"></i>
+                                            <h5 class="text-muted">Belum ada paket membership</h5>
+                                            <p class="text-muted mb-0">Silakan tambah paket baru</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -141,18 +166,18 @@
     // Script untuk mengisi data pada modal edit
     document.addEventListener('DOMContentLoaded', function() {
         const editButtons = document.querySelectorAll('.edit-btn');
-        
+
         editButtons.forEach(button => {
             button.addEventListener('click', function() {
                 const id = this.getAttribute('data-id');
                 const name = this.getAttribute('data-name');
                 const price = this.getAttribute('data-price');
                 const duration = this.getAttribute('data-duration');
-                
+
                 document.getElementById('edit_name').value = name;
                 document.getElementById('edit_price').value = price;
                 document.getElementById('edit_duration_in_months').value = duration;
-                
+
                 // Update form action URL
                 document.getElementById('editPaketForm').action = `/admin/paketmember/${id}`;
             });

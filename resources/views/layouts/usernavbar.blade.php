@@ -9,7 +9,6 @@
 
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
-        <!-- Header with Welcome Text and Toggle Button -->
         <div class="d-flex justify-content-between align-items-center text-white px-3 py-3">
             <h2 class="m-0 fs-5">Selamat Datang, {{ auth()->user()->name }}</h2>
             <button class="toggle-sidebar ms-2" id="toggleSidebar">
@@ -47,6 +46,14 @@
                         {{ ucfirst($membership->status) }}
                     </span>
                 </p>
+                  <p class="text-white m-0 mt-1" style="font-size: 0.8rem;">
+            <i class="bi bi-calendar3"></i>
+            {{ \Carbon\Carbon::parse($membership->start_date)->format('d M Y') }} -
+            {{ \Carbon\Carbon::parse($membership->end_date)->format('d M Y') }}
+        </p>
+        <p class="text-white m-0" style="font-size: 0.8rem;">
+            ({{ \Carbon\Carbon::parse($membership->end_date)->diffForHumans() }})
+        </p>
             @else
                 <p class="text-white m-0 mt-2">
                     <span class="badge bg-secondary">Belum jadi member</span>
@@ -77,14 +84,7 @@
                 <span class="ms-2">Pengaturan</span>
             </a>
 
-            <!-- Logout -->
-            <form action="{{ route('logout') }}" method="POST" class="mt-auto w-100">
-                @csrf
-                <button type="submit" class="logout-button tooltip-sidebar" data-title="Keluar">
-                    <i class="bi bi-box-arrow-right"></i>
-                    <span class="ms-2">Keluar</span>
-                </button>
-            </form>
+
         </nav>
     </div>
 

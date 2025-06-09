@@ -49,32 +49,24 @@ class UserSettingsController extends Controller
     return back()->with('success', 'Profil berhasil diperbarui');
 }
 
-    public function updatePassword(Request $request)
-    {
-        /** @var \App\Models\User $user */
-        $user = Auth::user();
+  public function updatePassword(Request $request)
+{
+    /** @var \App\Models\User $user */
+    $user = Auth::user();
 
-        $request->validate([
-            'current_password' => 'required',
-            'new_password' => [
-                'required',
-                'confirmed',
-                Password::min(8)
-                    ->letters()
-                    ->mixedCase()
-                    ->numbers()
-                    ->symbols()
-            ],
-        ]);
+    $request->validate([
+        'current_password' => 'required',
+        'new_password' => ['required', 'confirmed', 'min:8'],
+    ]);
 
-        if (!Hash::check($request->current_password, $user->password)) {
-            return back()->with('password_error', 'Password saat ini salah');
-        }
-
-        $user->update([
-            'password' => Hash::make($request->new_password)
-        ]);
-
-        return back()->with('password_success', 'Password berhasil diubah');
+    if (!Hash::check($request->current_password, $user->password)) {
+        return back()->with('password_error', 'Password saat ini salah');
     }
+
+    $user->update([
+        'password' => Hash::make($request->new_password)
+    ]);
+
+    return back()->with('password_success', 'Password berhasil diubah');
+}
 }

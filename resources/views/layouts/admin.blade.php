@@ -3,10 +3,10 @@
 
 @section('content')
     <div class="d-flex">
-        @include('layouts.sidenavbar') {{-- Sidebar khusus admin --}}
-        
+        @include('layouts.sidenavbar')
+
         <div class="main-content">
-            @yield('admin-content') {{-- Konten halaman admin --}}
+            @yield('admin-content') 
         </div>
     </div>
 @endsection

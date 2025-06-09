@@ -9,6 +9,8 @@ use App\Models\User;
 use App\Models\Membership;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\View\View;
+use App\Models\ClassSchedule;
+
 
 class AdminMemberController extends Controller
 {
@@ -52,7 +54,7 @@ class AdminMemberController extends Controller
             'password' => Hash::make('password123'),
         ]);
 
-       
+
         $type = MembershipType::findOrFail($validatedData['membership_type']);
         $startDate = now();
         $endDate = now()->addMonths($type->duration_in_months);
@@ -173,4 +175,11 @@ class AdminMemberController extends Controller
 
         return "Data membership telah diperiksa. " . count($inconsistentUsers) . " user diperbaiki.";
     }
+
+    public function showExportPage()
+{
+    $allClasses = ClassSchedule::with('fitnessClass')->get();
+
+    return view('admin.exports.index', compact('allClasses'));
+}
 }

@@ -22,7 +22,7 @@
         <!-- Login & Register -->
         <div class="nav-auth d-none d-lg-block">
             <ul class="nav">
-                <li class="nav-item"><a href="{{ route('login') }}" class="nav-link btn btn-success text-white">Login</a></li>
+                <li class="nav-item"><a href="{{ route(name: 'login') }}" class="nav-link btn btn-success text-white">Login</a></li>
                 <li class="nav-item"><a href="/register" class="nav-link btn btn-success text-white">Register</a></li>
             </ul>
         </div>
@@ -40,7 +40,7 @@
             <li class="nav-item"><a href="/membership" class="nav-link text-white"><i class="bi bi-card-checklist me-2"></i>Membership</a></li>
             <li class="nav-item"><a href="/about" class="nav-link text-white"><i class="bi bi-info-circle-fill me-2"></i>Tentang Kami</a></li>
             <li class="nav-item auth-item">
-                <a href="{{ route('login') }}" class="nav-link btn btn-success text-white"><i class="bi bi-box-arrow-in-right me-2"></i>Login</a>
+                <a href="{{ route(name: 'login') }}" class="nav-link btn btn-success text-white"><i class="bi bi-box-arrow-in-right me-2"></i>Login</a>
             </li>
             <li class="nav-item auth-item">
                 <a href="/register" class="nav-link btn btn-success text-white"><i class="bi bi-person-plus-fill me-2"></i>Register</a>

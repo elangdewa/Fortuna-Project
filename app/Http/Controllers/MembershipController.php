@@ -12,9 +12,7 @@ use Illuminate\Support\Facades\Log;
 
 class MembershipController extends Controller
 {
-    /**
-     * Menampilkan halaman pemilihan membership
-     */
+
     public function create()
     {
         $types = MembershipType::all(); // ambil semua jenis membership
@@ -122,7 +120,7 @@ class MembershipController extends Controller
         $membership = Membership::create([
             'user_id' => $request->user_id,
             'membership_type' => $type->id,
-            'status' => 'pending_extension', 
+            'status' => 'pending_extension',
             'start_date' => $activeMembership->end_date, // Mulai setelah membership aktif berakhir
             'end_date' => $activeMembership->end_date->copy()->addMonths($type->duration_in_months),
             'payment_status' => 'pending',
@@ -182,10 +180,7 @@ class MembershipController extends Controller
         return redirect()->back()->with('success', 'Membership berhasil dibatalkan.');
     }
 
-    /**
-     * Memeriksa dan memperbarui membership yang sudah kadaluarsa
-     * (dipanggil oleh scheduler/cron job)
-     */
+
     public function checkExpirations()
     {
         $expiredMemberships = Membership::where('status', 'active')

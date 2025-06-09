@@ -16,7 +16,7 @@ class LoginController extends Controller
      */
     protected function authenticated(Request $request, $user)
     {
-        
+
         $request->session()->regenerate();
 
 
@@ -46,6 +46,8 @@ class LoginController extends Controller
      */
     public function logout(Request $request)
     {
+            $request->session()->flush();
+
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();

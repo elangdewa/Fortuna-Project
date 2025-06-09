@@ -48,8 +48,32 @@ class HomeController extends Controller
 
 public function member()
 {
-    $types = MembershipType::all(); // ambil data jenis membership
-    return view('user.member', compact('types'));
+    $user = Auth::user();
+    $types = MembershipType::all();
+
+    $active_membership = Membership::where('user_id', $user->id)
+        ->where('status', 'active')
+        ->where('end_date', '>=', now())
+        ->with('type')
+        ->first();
+
+    $latest_membership = Membership::where('user_id', $user->id)
+        ->with('type')
+        ->latest('end_date')
+        ->first();
+
+    $membership_history = Membership::where('user_id', $user->id)
+        ->with('type')
+        ->orderByDesc('start_date')
+        ->get();
+
+    return view('user.member', compact(
+        'types',
+        'user',
+        'active_membership',
+        'latest_membership',
+        'membership_history'
+    ));
 }
 
 public function setting()
@@ -62,5 +86,6 @@ public function trainer()
     $trainers = PersonalTrainer::all(); // Ini benar
     return view('user.trainer', compact('trainers'));
 }
+
 
 }

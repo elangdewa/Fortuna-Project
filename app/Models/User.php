@@ -15,14 +15,16 @@ class User extends Authenticatable
         'phone', 'role', 'is_member', 'password', 'profile_photo',
     ];
 
-    public function membership()
-    {
-        return $this->hasOne(Membership::class)->withDefault([
+  public function membership()
+{
+    return $this->hasOne(Membership::class)
+        ->latestOfMany('end_date')
+        ->withDefault([
             'start_date' => null,
             'end_date' => null,
             'status' => 'inactive',
         ]);
-    }
+}
 
     // Untuk akses langsung ke membership type
     public function membershipType()

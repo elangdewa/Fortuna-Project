@@ -10,19 +10,28 @@ use Illuminate\Http\Request;
 
 class TrainerOrderController extends Controller
 {
-    public function index()
-    {
-        $orders = PersonalTrainerOrder::with(['user', 'trainer'])
-                    ->orderBy('order_date', 'desc')
-                    ->get();
+    public function index(Request $request)
+{
+    $search = $request->input('search');
 
-        return view('admin.trainer.orders', compact('orders'));
-    }
+    $orders = PersonalTrainerOrder::with(['user', 'trainer'])
+        ->when($search, function($query) use ($search) {
+            $query->whereHas('user', function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%");
+            })
+            ->orWhereHas('trainer', function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%");
+            });
+        })
+        ->orderBy('order_date', 'desc')
+        ->paginate(10);
 
+    return view('admin.trainer.orders', compact('orders'));
+}
     public function update(Request $request, $id)
     {
         $order = PersonalTrainerOrder::findOrFail($id);
-        
+
         $request->validate([
             'status' => 'required|in:pending,approved,rejected'
         ]);

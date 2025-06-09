@@ -9,9 +9,12 @@ class ClassSchedule extends Model
      public $timestamps = false;
     protected $fillable = [
         'class_id', 'day_of_week', 'start_time', 'end_time',
-        'price', 'description', 'capacity'
+        'price', 'description', 'capacity','date'
     ];
 
+    protected $casts = [
+    'date' => 'date',
+];
     public function fitnessClass()
     {
         return $this->belongsTo(FitnessClass::class, 'class_id');
@@ -53,4 +56,9 @@ class ClassSchedule extends Model
     {
         return $this->registrations()->where('user_id', $userId)->exists();
     }
+
+    public function instances()
+{
+    return $this->hasMany(ClassScheduleInstance::class, 'schedule_id');
+}
 }

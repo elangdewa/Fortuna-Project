@@ -7,7 +7,6 @@
 
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     <link href="{{ asset('css/membership.css') }}" rel="stylesheet">
-    <!-- Bootstrap Icons -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
 
 </head>

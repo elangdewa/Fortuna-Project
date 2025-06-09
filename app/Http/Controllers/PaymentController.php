@@ -11,7 +11,7 @@ use App\Models\PersonalTrainerOrder;
 use App\Models\PersonalTrainer;
 use App\Models\FitnessClass;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB; // Add this line
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Midtrans\Config;
@@ -75,7 +75,7 @@ class PaymentController extends Controller
             // Dapatkan Snap Token dari Midtrans
             $snapToken = Snap::getSnapToken($params);
 
-            // Simpan data pembayaran ke tabel payments
+
             $payment = Payment::create([
                 'user_id' => $user->id,
                 'transaction_id' => $orderId,
@@ -167,17 +167,16 @@ case 'class_registration':
                 ]];
 
             case 'fitness_class':
-            case 'class_registration':
-             $classRegistration = ClassRegistration::with('schedule.fitnessClass')->findOrFail($referenceId);
-$classSchedule = $classRegistration->schedule;
-return [[
-    'id' => 'class-' . $referenceId,
-    'price' => (int) $amount,
-    'quantity' => 1,
-    'name' => 'Fitness Class - ' . $classSchedule->fitnessClass->name,
-    'brand' => 'Fitness Class',
-    'category' => 'Class'
-]];
+        case 'class_registration':
+            $registration = ClassRegistration::with(['schedule.fitnessClass'])->findOrFail($referenceId);
+            return [[
+                'id' => 'class-' . $referenceId,
+                'price' => (int) $amount,
+                'quantity' => 1,
+                'name' => 'Fitness Class - ' . $registration->schedule->fitnessClass->name,
+                'brand' => 'Fitness Class',
+                'category' => 'Class'
+            ]];
 
             default:
                 throw new \Exception('Tipe transaksi tidak valid: ' . $type);
@@ -373,7 +372,7 @@ return [[
     }
 }
 
-  private function activateFitnessClass(Payment $payment)
+private function activateFitnessClass(Payment $payment)
 {
     Log::info('Starting fitness class activation', [
         'payment_id' => $payment->id,
@@ -383,93 +382,100 @@ return [[
     try {
         DB::beginTransaction();
 
-        $registration = ClassRegistration::find($payment->reference_id);
+        $registration = ClassRegistration::with(['schedule.fitnessClass'])
+            ->findOrFail($payment->reference_id);
 
-        if ($registration) {
-            // Update registration yang sudah ada
-            $registration->payment_status = 'paid';
-            $registration->status = 'active';
-            $registration->save();
-
-            Log::info('Existing fitness class registration activated', [
-                'registration_id' => $registration->id
-            ]);
-        } else {
-            // Buat registration baru jika tidak ada
-            $registration = ClassRegistration::create([
-                'user_id' => $payment->user_id,
-                'class_schedule_id' => $payment->class_schedule_id ?? null,
-                'payment_status' => 'paid',
-                'status' => 'active',
-                'registered_at' => now(),
-                'price' => $payment->amount
-            ]);
-
-            Log::info('New fitness class registration created', [
-                'registration_id' => $registration->id
-            ]);
-        }
+        // Update registration status
+        $registration->update([
+            'payment_status' => 'paid',
+            'status' => 'active'
+        ]);
 
         // Update payment status
         $payment->payment_status = 'paid';
         $payment->payment_time = now();
         $payment->save();
 
+        Log::info('Fitness class registration confirmed', [
+            'registration_id' => $registration->id,
+            'class_name' => $registration->schedule->fitnessClass->name,
+            'schedule_day' => $registration->schedule->day_of_week,
+            'status' => 'confirmed'
+        ]);
+
         DB::commit();
-        return true;
 
     } catch (\Exception $e) {
         DB::rollBack();
         Log::error('Failed to activate fitness class', [
             'payment_id' => $payment->id,
-            'error' => $e->getMessage()
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
         ]);
         throw $e;
     }
 }
-
     // Method lainnya tetap sama (checkPaymentStatus, getPendingPayments, dll)
-    public function checkPaymentStatus($paymentId)
-    {
-        try {
+  public function checkPaymentStatus($paymentId)
+{
+    try {
         $payment = Payment::where('transaction_id', $paymentId)->firstOrFail();
 
-            if ($payment->payment_status === 'paid') {
+        // If already paid, return success
+        if ($payment->payment_status === 'paid') {
+            return response()->json([
+                'success' => true,
+                'payment_status' => 'paid',
+                'message' => 'Pembayaran sudah berhasil'
+            ]);
+        }
+
+        // Check Midtrans status
+        $statusResponse = Transaction::status($paymentId);
+        $status = (array) $statusResponse;
+
+        if ($status['transaction_status'] === 'settlement' || $status['transaction_status'] === 'capture') {
+            DB::beginTransaction();
+            try {
+                // Update payment
+                $payment->update([
+                    'payment_status' => 'paid',
+                    'payment_time' => now()
+                ]);
+
+                // Activate the service based on payment type
+                $this->activateService($payment);
+
+                DB::commit();
                 return response()->json([
                     'success' => true,
                     'payment_status' => 'paid',
-                    'message' => 'Pembayaran sudah berhasil'
+                    'message' => 'Pembayaran berhasil!'
                 ]);
+            } catch (\Exception $e) {
+                DB::rollBack();
+                throw $e;
             }
-
-            $statusResponse = Transaction::status($payment->transaction_id);
-            $status = is_object($statusResponse) ? (array) $statusResponse : $statusResponse;
-
-            $transactionStatus = $status['transaction_status'] ?? '';
-            $fraudStatus = $status['fraud_status'] ?? 'accept';
-
-            $updated = $this->updatePaymentStatus($payment, $transactionStatus, $fraudStatus);
-
-            return response()->json([
-                'success' => true,
-                'payment_status' => $payment->payment_status,
-                'transaction_status' => $transactionStatus,
-                'updated' => $updated,
-                'message' => $this->getStatusMessage($payment->payment_status)
-            ]);
-
-        } catch (\Exception $e) {
-            Log::error('Payment status check failed', [
-                'payment_id' => $paymentId,
-                'error' => $e->getMessage()
-            ]);
-
-            return response()->json([
-                'success' => false,
-                'error' => 'Gagal memeriksa status pembayaran'
-            ], 500);
         }
+
+        return response()->json([
+            'success' => true,
+            'payment_status' => $payment->payment_status,
+            'message' => $this->getStatusMessage($payment->payment_status)
+        ]);
+
+    } catch (\Exception $e) {
+        Log::error('Payment status check failed', [
+            'payment_id' => $paymentId,
+            'error' => $e->getMessage()
+        ]);
+
+        return response()->json([
+            'success' => false,
+            'error' => 'Gagal memeriksa status pembayaran'
+        ], 500);
     }
+}
 
     private function getStatusMessage($status)
     {

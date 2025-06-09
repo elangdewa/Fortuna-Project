@@ -14,9 +14,9 @@ class AdminController extends Controller
 {
      public function index()
     {
-     
+
     $recentMembers = User::where('role', 'member')
-        ->with('membershipType')  
+        ->with('membershipType')
         ->latest()
         ->take(5)
         ->get();

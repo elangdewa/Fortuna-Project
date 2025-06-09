@@ -1,0 +1,1189 @@
+
+    /* Main color scheme */
+    :root {
+        --primary-color: #da9100;
+        --dark-color: #080808;
+        --light-gray: #f5f5f5;
+        --medium-gray: #e0e0e0;
+    }
+
+    /* General styling */
+    body {
+        color: var(--dark-color);
+    }
+
+    /* Card styling */
+    .hover-card {
+        transition: all 0.3s ease;
+        border-radius: 12px;
+        overflow: hidden;
+        background-color: #ffffff;
+    }
+
+    .hover-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(218, 145, 0, 0.1) !important;
+    }
+
+    /* Button styling */
+    .btn-booking {
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        transition: all 0.3s ease;
+        font-weight: 500;
+    }
+
+    .btn-booking:hover {
+        background-color: #c48200;
+        color: white;
+        box-shadow: 0px 4px 10px rgba(218, 145, 0, 0.3);
+    }
+
+    .btn-cancel {
+        color: #dc3545;
+        background-color: rgba(220, 53, 69, 0.1);
+        border: none;
+        transition: all 0.3s ease;
+    }
+
+    .btn-cancel:hover {
+        background-color: rgba(220, 53, 69, 0.2);
+    }
+
+    /* Table styling */
+    table.table {
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+    table.table thead th {
+        border-bottom: 2px solid var(--medium-gray);
+        color: var(--dark-color);
+        font-weight: 600;
+        padding: 1rem;
+    }
+
+    table.table tbody td {
+        padding: 1rem;
+        vertical-align: middle;
+        border-bottom: 1px solid var(--medium-gray);
+    }
+
+    /* Slot indicator */
+    .slot-label {
+        color: var(--dark-color);
+        opacity: 0.7;
+    }
+
+    /* Price tag */
+    .price-tag {
+        position: relative;
+        display: inline-block;
+    }
+
+    /* Loading spinner */
+    .spinner-border {
+        width: 1rem;
+        height: 1rem;
+        border-width: 0.2em;
+    }
+
+    /* Success modal styling */
+    .success-icon {
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        background-color: rgba(25, 135, 84, 0.1);
+    }
+
+    /* Dark mode considerations - keep important text visible */
+    .card-body,
+    .card-body .card-title,
+    .card-body .card-text,
+    .card-body small,
+    .card-body p {
+        color: var(--dark-color) !important;
+    }
+
+
+
+/* Common Styles */
+.section-header {
+    position: relative;
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+
+.section-divider {
+    height: 4px;
+    width: 80px;
+    margin: 0 auto;
+    border-radius: 2px;
+}
+
+.card {
+    transition: all 0.3s ease;
+    border: none;
+    overflow: hidden;
+    height: 100%;
+}
+
+/* Section-specific dividers */
+.membership-divider {
+    background: linear-gradient(90deg, #fdc830, #f37335);
+}
+
+.fitness-divider {
+    background: linear-gradient(90deg, #11998e, #38ef7d);
+}
+
+.trainer-divider {
+    background: linear-gradient(90deg, #8e2de2, #4a00e0);
+}
+
+/* Membership Card Styles */
+.membership-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.membership-card .card-header {
+    background: linear-gradient(135deg, #fdc830, #f37335);
+    color: white;
+    text-align: center;
+    padding: 1.5rem 1rem;
+    border-bottom: none;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+}
+
+.membership-card .card-title {
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.price-tag {
+    text-align: center;
+    margin: 1rem 0;
+}
+
+.price-tag h4 {
+    font-weight: 700;
+    color: #f37335;
+}
+
+.membership-features {
+    background-color: rgba(253, 200, 48, 0.1);
+    padding: 1rem;
+    border-radius: 10px;
+    margin-bottom: 1.5rem;
+}
+
+.membership-features i {
+    color: #f37335;
+    margin-right: 0.5rem;
+}
+
+.membership-btn {
+    background: linear-gradient(135deg, #fdc830, #f37335);
+    color: white;
+    border-radius: 30px;
+    font-weight: 600;
+    padding: 0.6rem 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.membership-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(243, 115, 53, 0.4);
+    color: white;
+}
+
+.membership-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+
+/* Fitness Card Styles */
+.fitness-card {
+    border-radius: 15px;
+    background: white;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    position: relative;
+}
+
+.fitness-ribbon {
+    position: absolute;
+    top: 15px;
+    right: -25px;
+    transform: rotate(45deg);
+    background: linear-gradient(135deg, #11998e, #38ef7d);
+    color: white;
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 5px 25px;
+    z-index: 1;
+}
+
+.fitness-card .card-title {
+    color: #11998e;
+    font-weight: 700;
+    margin-bottom: 0.8rem;
+}
+
+.schedule-info {
+    background: rgba(17, 153, 142, 0.08);
+    padding: 12px;
+    border-radius: 10px;
+    margin: 1rem 0;
+}
+
+.schedule-info i {
+    color: #38ef7d;
+}
+
+.schedule-info span {
+    font-weight: 600;
+    color: #333;
+}
+
+.capacity-wrapper {
+    margin-top: 1rem;
+}
+
+.progress {
+    height: 8px;
+    background-color: #eee;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    background: linear-gradient(90deg, #11998e, #38ef7d);
+}
+
+.fitness-btn {
+    background: linear-gradient(135deg, #11998e, #38ef7d);
+    color: white;
+    border-radius: 30px;
+    font-weight: 600;
+    padding: 0.6rem 1.5rem;
+    width: 100%;
+    transition: all 0.3s ease;
+}
+
+.fitness-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(17, 153, 142, 0.4);
+    color: white;
+}
+
+.fitness-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+}
+
+/* Trainer Card Styles */
+.trainer-card {
+    border-radius: 12px;
+    background: white;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.trainer-img-wrapper {
+    position: relative;
+    overflow: hidden;
+}
+
+.trainer-img {
+    height: 250px;
+    width: 100%;
+    object-fit: cover;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    transition: transform 0.5s ease;
+}
+
+.trainer-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(0deg, rgba(74, 0, 224, 0.8), transparent);
+    padding: 20px 15px;
+    transition: all 0.3s ease;
+}
+
+.trainer-overlay-name {
+    color: white;
+    margin: 0;
+    font-weight: 700;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    transform: translateY(20px);
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.trainer-card:hover .trainer-overlay-name {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.trainer-card:hover .trainer-img {
+    transform: scale(1.05);
+}
+
+.trainer-card .card-title {
+    color: #8e2de2;
+    font-weight: 700;
+    margin-bottom: 0.8rem;
+}
+
+.trainer-specialty {
+    background: rgba(142, 45, 226, 0.08);
+    padding: 12px;
+    border-radius: 10px;
+    margin-bottom: 1.5rem;
+}
+
+.trainer-specialty i {
+    color: #8e2de2;
+    margin-right: 0.5rem;
+}
+
+.trainer-btn {
+    background: linear-gradient(135deg, #8e2de2, #4a00e0);
+    color: white;
+    border-radius: 30px;
+    font-weight: 600;
+    padding: 0.6rem 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.trainer-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(142, 45, 226, 0.4);
+    color: white;
+}
+
+.trainer-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .fitness-ribbon {
+        right: -35px;
+        font-size: 0.7rem;
+    }
+
+    .trainer-img {
+        height: 200px;
+    }
+
+    .section-divider {
+        width: 60px;
+        height: 3px;
+    }
+}
+
+@media (max-width: 576px) {
+    .card-body {
+        padding: 1.25rem;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+    }
+
+    .price-tag h4 {
+        font-size: 1.2rem;
+    }
+
+    .membership-features, .schedule-info, .trainer-specialty {
+        padding: 10px;
+    }
+}
+
+
+
+:root {
+    --primary-color: #da9100;
+    --dark-color: #080808;
+    --light-gray: #f5f5f5;
+    --medium-gray: #e0e0e0;
+}
+
+/* Membership Card Styling */
+.membership-card {
+    position: relative;
+    background: white;
+    border-radius: 15px;
+    border: none;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.membership-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(218, 145, 0, 0.1);
+}
+
+.card-ribbon {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 8px;
+    background-color: var(--primary-color);
+}
+
+.package-duration {
+    display: inline-block;
+    background-color: rgba(218, 145, 0, 0.1);
+    color: var(--primary-color);
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.price-label {
+    vertical-align: top;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--dark-color);
+    margin-right: 2px;
+}
+
+.price-amount {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--dark-color);
+    line-height: 1;
+}
+
+.benefit-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+}
+
+.btn-membership {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 10px 20px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-membership:hover {
+    background-color: #c48200;
+    color: white;
+    box-shadow: 0 5px 15px rgba(218, 145, 0, 0.3);
+}
+
+/* Success Modal */
+.success-icon-container {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 120px;
+    height: 120px;
+    border-radius: 60px;
+    background-color: rgba(25, 135, 84, 0.1);
+}
+
+/* Form Elements */
+.form-check-input:checked {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+/* Active Membership Card */
+.membership-badge {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: rgba(218, 145, 0, 0.1);
+}
+
+/* Animation */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.btn-membership:focus {
+    animation: pulse 1s infinite;
+}
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
+    .price-amount { font-size: 1.5rem; }
+    .price-label { font-size: 1rem; }
+    .card-title { font-size: 1.1rem; }
+    .benefit-item { font-size: 0.8rem; }
+}
+
+
+
+/* Custom Styles */
+.card {
+    transition: all 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+}
+
+.form-control:focus {
+    border-color: var(--bs-primary);
+    box-shadow: 0 0 0 0.2rem rgba(var(--bs-primary-rgb), 0.25);
+}
+
+.btn {
+    transition: all 0.2s ease;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+}
+
+/* Input styling */
+.form-control {
+    background-color: #fff !important;
+    color: #080808 !important;
+    border: 2px solid #e9ecef;
+}
+
+.form-control::placeholder {
+    color: rgba(8, 8, 8, 0.5) !important;
+}
+
+.form-control:focus {
+    background-color: #fff !important;
+    color: #080808 !important;
+}
+
+/* Alert improvements */
+.alert {
+    border-radius: 12px;
+}
+
+/* Card header improvements */
+.card-header {
+    border-bottom: 1px solid rgba(0,0,0,0.05) !important;
+}
+
+/* Typography */
+.fw-bold {
+    font-weight: 700 !important;
+}
+
+.fw-semibold {
+    font-weight: 600 !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .container-fluid {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .card-body {
+        padding: 1.5rem 1rem;
+    }
+}
+
+
+
+:root {
+    --primary-color: #da9100;
+    --dark-color: #080808;
+    --light-bg: #f8f9fa;
+    --shadow: 0 4px 20px rgba(218, 145, 0, 0.1);
+    --shadow-hover: 0 8px 30px rgba(218, 145, 0, 0.2);
+}
+
+/* Custom Colors */
+.text-primary-custom {
+    color: var(--primary-color) !important;
+}
+
+.text-dark-custom {
+    color: var(--dark-color) !important;
+}
+
+.bg-primary-custom {
+    background-color: var(--primary-color) !important;
+}
+
+.btn-primary-custom {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+    font-weight: 600;
+    border-radius: 12px;
+    padding: 12px 24px;
+    border: none;
+}
+
+.btn-primary-custom:hover {
+    background-color: #c28400;
+    border-color: #c28400;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-hover);
+}
+
+.btn-primary-custom:focus {
+    background-color: #c28400;
+    border-color: #c28400;
+    box-shadow: 0 0 0 0.2rem rgba(218, 145, 0, 0.25);
+}
+
+/* Custom Navigation Pills */
+.custom-nav-pills {
+    background-color: white;
+    border-radius: 20px;
+    padding: 8px;
+    box-shadow: var(--shadow);
+    border: 2px solid #e9ecef;
+}
+
+.custom-nav-link {
+    background-color: transparent !important;
+    color: var(--dark-color) !important;
+    border-radius: 16px !important;
+    padding: 16px 32px !important;
+    font-weight: 600 !important;
+    font-size: 1.1rem !important;
+    border: none !important;
+    margin: 0 4px;
+}
+
+.custom-nav-link:hover {
+    background-color: rgba(218, 145, 0, 0.1) !important;
+    color: var(--primary-color) !important;
+}
+
+.custom-nav-link.active {
+    background-color: var(--primary-color) !important;
+    color: white !important;
+    box-shadow: 0 4px 15px rgba(218, 145, 0, 0.3);
+}
+
+/* Trainer Cards */
+.trainer-card {
+    border: none;
+    border-radius: 20px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    background: white;
+}
+
+.trainer-card:hover {
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-5px);
+}
+
+.trainer-card .card-header {
+    border: none;
+    padding: 20px;
+}
+
+.trainer-card .card-body {
+    padding: 30px;
+}
+
+.specialization-badge .badge {
+    border: 2px solid var(--primary-color);
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+/* Order Cards */
+.order-card {
+    border: none;
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    background: white;
+}
+
+.order-card .card-header {
+    border: none;
+    padding: 20px;
+}
+
+.order-card .card-body {
+    padding: 25px;
+}
+
+.detail-item {
+    display: flex;
+    align-items: flex-start;
+    padding: 8px 0;
+}
+
+/* Custom Modal */
+.custom-modal {
+    border: none;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 50px rgba(0, 0, 0, 0.15);
+}
+
+.custom-modal .modal-header {
+    border: none;
+    padding: 25px 30px;
+}
+
+.custom-modal .modal-body {
+    padding: 30px;
+}
+
+.custom-modal .modal-footer {
+    border: none;
+    padding: 20px 30px;
+}
+
+/* Custom Inputs */
+.custom-input {
+    border: 2px solid #e9ecef;
+    border-radius: 12px;
+    padding: 12px 16px;
+    font-size: 1rem;
+}
+
+.custom-input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(218, 145, 0, 0.15);
+}
+
+/* Package Info */
+.package-info .card {
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.package-info .card-header {
+    border: none;
+    padding: 16px 20px;
+}
+
+.package-info .card-body {
+    padding: 20px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .custom-nav-link {
+        padding: 12px 20px !important;
+        font-size: 1rem !important;
+    }
+
+    .nav-text {
+        display: none;
+    }
+
+    .trainer-card .card-body {
+        padding: 20px;
+    }
+
+    .custom-modal .modal-body {
+        padding: 20px;
+    }
+}
+
+/* Loading States */
+.spinner-border {
+    width: 1rem;
+    height: 1rem;
+    border-width: 0.2em;
+}
+
+/* Badges */
+.badge {
+    font-size: 0.85rem;
+    font-weight: 500;
+    padding: 8px 12px;
+    border-radius: 10px;
+}
+
+/* Alert Improvements */
+.alert {
+    border-radius: 12px;
+    border: none;
+    padding: 16px 20px;
+}
+
+.alert-success {
+    background-color: rgba(25, 135, 84, 0.1);
+    color: #0f5132;
+    border-left: 4px solid #198754;
+}
+
+/* Empty State */
+.display-1 {
+    font-size: 4rem;
+    opacity: 0.3;
+}
+
+/* Tombol Pesan di Fitness */
+.btn-booking,
+.btn-primary-custom {
+    background-color: #da9100 !important; /* Warna latar */
+    color: white;
+    border: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-booking:hover,
+.btn-primary-custom:hover {
+    background-color: #c48200; /* Warna saat hover */
+    box-shadow: 0 4px 15px rgba(218, 145, 0, 0.3);
+}
+
+/* Tombol Pilih Paket di Member */
+.btn-membership {
+    background-color: #da9100; /* Warna latar */
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 10px 20px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-membership:hover {
+    background-color: #c48200; /* Warna saat hover */
+    color: white;
+    box-shadow: 0 5px 15px rgba(218, 145, 0, 0.3);
+}
+
+/* Tombol Pilih Trainer di Trainer */
+.trainer-btn {
+    background-color: #da9100; /* Warna latar */
+    color: white;
+    border: none;
+    border-radius: 30px;
+    font-weight: 600;
+    padding: 0.6rem 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.trainer-btn:hover {
+    background-color: #c48200; /* Warna saat hover */
+    color: white;
+    box-shadow: 0 5px 15px rgba(218, 145, 0, 0.3);
+}
+
+/* Status and History Section Toggle Buttons */
+.status-toggle-section {
+    background: white;
+    border-radius: 15px;
+    padding: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    display: inline-flex;
+    margin: 0 auto;
+}
+
+.status-toggle-btn {
+    background: transparent;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-weight: 600;
+    color: var(--dark-color);
+    transition: all 0.3s ease;
+    position: relative;
+    margin: 0 4px;
+}
+
+.status-toggle-btn.active {
+    background: var(--primary-color);
+    color: white;
+    box-shadow: 0 4px 12px rgba(218, 145, 0, 0.3);
+}
+
+.status-toggle-btn:hover:not(.active) {
+    background: rgba(218, 145, 0, 0.1);
+    color: var(--primary-color);
+}
+
+/* Enhanced Membership Status Card */
+.membership-status-card {
+    background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+    border: none;
+    border-radius: 20px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    position: relative;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.membership-status-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 6px;
+    background: linear-gradient(90deg, var(--primary-color) 0%, #f37335 100%);
+}
+
+.membership-status-header {
+    background: rgba(218, 145, 0, 0.05);
+    padding: 25px 30px 20px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.membership-status-body {
+    padding: 30px;
+}
+
+.status-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: rgba(218, 145, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+}
+
+.membership-info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.membership-info-item:last-child {
+    border-bottom: none;
+}
+
+.info-label {
+    color: #6c757d;
+    font-weight: 500;
+    font-size: 0.95rem;
+}
+
+.info-value {
+    color: var(--dark-color);
+    font-weight: 600;
+    text-align: right;
+}
+
+.status-badge {
+    padding: 6px 16px;
+    border-radius: 25px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.status-active {
+    background: rgba(25, 135, 84, 0.1);
+    color: #198754;
+    border: 1px solid rgba(25, 135, 84, 0.2);
+}
+
+.status-expired {
+    background: rgba(220, 53, 69, 0.1);
+    color: #dc3545;
+    border: 1px solid rgba(220, 53, 69, 0.2);
+}
+
+.status-pending {
+    background: rgba(255, 193, 7, 0.1);
+    color: #ffc107;
+    border: 1px solid rgba(255, 193, 7, 0.2);
+}
+
+/* Enhanced History Table */
+.history-section {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    margin-top: 30px;
+}
+
+.history-header {
+    background: rgba(218, 145, 0, 0.05);
+    padding: 25px 30px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.history-table-wrapper {
+    padding: 0;
+    overflow-x: auto;
+}
+
+.history-table {
+    margin: 0;
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 100%;
+}
+
+.history-table thead th {
+    background: #f8f9fa;
+    color: var(--dark-color);
+    font-weight: 700;
+    padding: 20px 25px;
+    border: none;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.history-table tbody td {
+    padding: 20px 25px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    vertical-align: middle;
+    color: var(--dark-color);
+    font-weight: 500;
+}
+
+.history-table tbody tr {
+    transition: all 0.3s ease;
+}
+
+.history-table tbody tr:hover {
+    background: rgba(218, 145, 0, 0.02);
+    transform: translateX(5px);
+}
+
+.history-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Table Cell Styling */
+.membership-type-cell {
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.date-cell {
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+
+/* Empty State Styling */
+.empty-state {
+    text-align: center;
+    padding: 60px 30px;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+}
+
+.empty-state-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: rgba(218, 145, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+}
+
+.empty-state-title {
+    color: var(--dark-color);
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.empty-state-text {
+    color: #6c757d;
+    font-size: 0.95rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .status-toggle-section {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .status-toggle-btn {
+        flex: 1;
+        margin: 0 2px;
+        padding: 10px 16px;
+        font-size: 0.9rem;
+    }
+
+    .membership-status-body,
+    .membership-status-header {
+        padding: 20px;
+    }
+
+    .history-header {
+        padding: 20px;
+    }
+
+    .history-table thead th,
+    .history-table tbody td {
+        padding: 15px 12px;
+        font-size: 0.85rem;
+    }
+
+    .membership-info-item {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 15px 0;
+    }
+
+    .info-value {
+        text-align: left;
+        margin-top: 5px;
+        font-size: 1.1rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .membership-status-card {
+        margin: 0 15px;
+    }
+
+    .history-section {
+        margin: 30px 15px 0;
+    }
+
+    .history-table thead th {
+        font-size: 0.75rem;
+        padding: 12px 8px;
+    }
+
+    .history-table tbody td {
+        padding: 12px 8px;
+        font-size: 0.8rem;
+    }
+}

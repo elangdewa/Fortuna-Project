@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="{{ asset('css/alluser.css') }}">
 @extends('layouts.user')
 
 @section('user-content')
@@ -6,6 +7,158 @@
         <h2 class="fw-bold display-6 mb-3" style="color: #080808;">Pilih Paket Membership Anda!</h2>
         <p class="text-muted lead mx-auto" style="max-width: 700px;">Temukan paket yang tepat untuk mendukung perjalanan kebugaran Anda.</p>
     </div>
+<div class="d-flex justify-content-center mb-4">
+    <div class="status-toggle-section">
+        <button class="status-toggle-btn active" id="statusBtn">
+            <i class="bi bi-person-badge me-2"></i>Status Membership
+        </button>
+        <button class="status-toggle-btn" id="riwayatBtn">
+            <i class="bi bi-clock-history me-2"></i>Riwayat Membership
+        </button>
+    </div>
+</div>
+<div id="statusSection" style="display: block;">
+    @if(($active_membership ?? $latest_membership) && ($active_membership ?? $latest_membership)->type)
+        <div class="membership-status-card">
+            <div class="membership-status-header">
+                <div class="status-icon">
+                    <i class="bi bi-person-check-fill" style="font-size: 1.5rem; color: var(--primary-color);"></i>
+                </div>
+                <h5 class="text-center fw-bold mb-0" style="color: var(--dark-color);">
+                    Informasi Membership Aktif
+                </h5>
+            </div>
+            <div class="membership-status-body">
+                <div class="membership-info-item">
+                    <span class="info-label">
+                        <i class="bi bi-person me-2"></i>Nama Lengkap
+                    </span>
+                    <span class="info-value">{{ $user->name }}</span>
+                </div>
+
+                <div class="membership-info-item">
+                    <span class="info-label">
+                        <i class="bi bi-telephone me-2"></i>Nomor Telepon
+                    </span>
+                    <span class="info-value">{{ $user->phone ?? 'Belum diatur' }}</span>
+                </div>
+
+                <div class="membership-info-item">
+                    <span class="info-label">
+                        <i class="bi bi-check-circle me-2"></i>Status
+                    </span>
+                    <span class="info-value">
+                        <span class="status-badge status-{{ strtolower(($active_membership ?? $latest_membership)->status) }}">
+                            {{ ucfirst(($active_membership ?? $latest_membership)->status) }}
+                        </span>
+                    </span>
+                </div>
+
+                <div class="membership-info-item">
+                    <span class="info-label">
+                        <i class="bi bi-award me-2"></i>Jenis Membership
+                    </span>
+                    <span class="info-value membership-type-cell">
+                        {{ ($active_membership ?? $latest_membership)->type->name }}
+                    </span>
+                </div>
+
+                <div class="membership-info-item">
+                    <span class="info-label">
+                        <i class="bi bi-calendar-check me-2"></i>Tanggal Mulai
+                    </span>
+                    <span class="info-value date-cell">
+                        {{ \Carbon\Carbon::parse(($active_membership ?? $latest_membership)->start_date)->format('d M Y') }}
+                    </span>
+                </div>
+
+                <div class="membership-info-item">
+                    <span class="info-label">
+                        <i class="bi bi-calendar-x me-2"></i>Tanggal Berakhir
+                    </span>
+                    <span class="info-value date-cell">
+                        {{ \Carbon\Carbon::parse(($active_membership ?? $latest_membership)->end_date)->format('d M Y') }}
+                    </span>
+                </div>
+            </div>
+        </div>
+    @else
+        <div class="empty-state">
+            <div class="empty-state-icon">
+                <i class="bi bi-person-x" style="font-size: 2rem; color: var(--primary-color);"></i>
+            </div>
+            <h5 class="empty-state-title">Belum Ada Membership</h5>
+            <p class="empty-state-text">
+                Anda belum memiliki membership yang terdaftar. Silakan pilih paket membership di bawah untuk memulai.
+            </p>
+        </div>
+    @endif
+</div>
+
+<!-- History Section -->
+<div id="riwayatSection" style="display: none;">
+    @if(isset($membership_history) && count($membership_history))
+        <div class="history-section">
+            <div class="history-header">
+                <h4 class="mb-0 fw-bold d-flex align-items-center" style="color: var(--dark-color);">
+                    <i class="bi bi-clock-history me-3" style="color: var(--primary-color);"></i>
+                    Riwayat Membership
+                </h4>
+                <p class="text-muted mb-0 mt-2">Berikut adalah riwayat semua membership yang pernah Anda miliki</p>
+            </div>
+            <div class="history-table-wrapper">
+                <table class="history-table table">
+                    <thead>
+                        <tr>
+                            <th>
+                                <i class="bi bi-award me-2"></i>Jenis Membership
+                            </th>
+                            <th>
+                                <i class="bi bi-calendar-event me-2"></i>Tanggal Mulai
+                            </th>
+                            <th>
+                                <i class="bi bi-calendar-check me-2"></i>Tanggal Berakhir
+                            </th>
+                            <th>
+                                <i class="bi bi-check-circle me-2"></i>Status
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($membership_history as $membership)
+                        <tr>
+                            <td class="membership-type-cell">
+                                <strong>{{ $membership->type->name }}</strong>
+                            </td>
+                            <td class="date-cell">
+                                {{ \Carbon\Carbon::parse($membership->start_date)->format('d M Y') }}
+                            </td>
+                            <td class="date-cell">
+                                {{ \Carbon\Carbon::parse($membership->end_date)->format('d M Y') }}
+                            </td>
+                            <td>
+                                <span class="status-badge status-{{ strtolower($membership->status) }}">
+                                    {{ ucfirst($membership->status) }}
+                                </span>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    @else
+        <div class="empty-state">
+            <div class="empty-state-icon">
+                <i class="bi bi-clock-history" style="font-size: 2rem; color: var(--primary-color);"></i>
+            </div>
+            <h5 class="empty-state-title">Belum Ada Riwayat</h5>
+            <p class="empty-state-text">
+                Anda belum memiliki riwayat membership. Riwayat akan muncul setelah Anda memiliki membership.
+            </p>
+        </div>
+    @endif
+</div>
 
     @if (session('error'))
     <div class="alert border-0 shadow-sm mb-4" style="background-color: rgba(220, 53, 69, 0.1); color: #dc3545;">
@@ -21,27 +174,6 @@
         <div class="d-flex align-items-center">
             <i class="bi bi-check-circle-fill me-2" style="font-size: 1.25rem;"></i>
             <div>{{ session('success') }}</div>
-        </div>
-    </div>
-    @endif
-
-    @if(isset($active_membership))
-    <div class="card border-0 shadow-sm mb-5">
-        <div class="card-body p-4">
-            <div class="d-flex align-items-center">
-                <div class="membership-badge me-4">
-                    <i class="bi bi-award" style="font-size: 2rem; color: #da9100;"></i>
-                </div>
-                <div>
-                    <h5 class="mb-2" style="color: #080808;">Membership Aktif</h5>
-                    <p class="mb-0">
-                        Anda telah memiliki membership <strong>{{ $active_membership->type->name }}</strong>
-                        sejak <strong>{{ $active_membership->start_date->format('d F Y') }}</strong>
-                        hingga <strong>{{ $active_membership->end_date->format('d F Y') }}</strong>
-                        ({{ $active_membership->start_date->diffInDays(now()) }} hari).
-                    </p>
-                </div>
-            </div>
         </div>
     </div>
     @endif
@@ -93,7 +225,7 @@
                         @endif
                     </div>
 
-                    <button class="btn btn-membership w-100 mt-auto py-2" data-bs-toggle="modal" data-bs-target="#modal-{{ $type->id }}">
+                    <button class="btn-membership w-100 mt-auto py-2" data-bs-toggle="modal" data-bs-target="#modal-{{ $type->id }}">
                         Pilih Paket
                     </button>
                 </div>
@@ -178,6 +310,7 @@
 </div>
 
 
+
  @if(session('success'))
     <div id="successModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
         <div class="bg-white rounded-lg shadow-lg p-6 max-w-sm">
@@ -196,133 +329,41 @@
         </div>
         @endif
 
-<style>
-:root {
-    --primary-color: #da9100;
-    --dark-color: #080808;
-    --light-gray: #f5f5f5;
-    --medium-gray: #e0e0e0;
-}
+<div class="modal fade" id="paymentStatusModal" tabindex="-1" aria-labelledby="paymentStatusModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="paymentStatusModalLabel">Status Pembayaran</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p id="paymentStatusMessage">Pembayaran Anda sedang diproses...</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
 
-/* Membership Card Styling */
-.membership-card {
-    position: relative;
-    background: white;
-    border-radius: 15px;
-    border: none;
-    overflow: hidden;
-    transition: all 0.3s ease;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-}
+ <div class="modal fade" id="successModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-body text-center p-5">
+                    <div class="success-icon mb-4">
+                        <i class="bi bi-check-circle-fill text-success" style="font-size: 4rem;"></i>
+                    </div>
+                    <h3 class="mb-3">Pembayaran Berhasil!</h3>
+                    <p class="mb-4 text-muted">Anda telah berhasil mendaftar memberships.</p>
+                    <button type="button" class="btn btn-lg px-5 btn-booking" onclick="window.location.reload()">
+                        Tutup
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-.membership-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 15px 30px rgba(218, 145, 0, 0.1);
-}
-
-.card-ribbon {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 8px;
-    background-color: var(--primary-color);
-}
-
-.package-duration {
-    display: inline-block;
-    background-color: rgba(218, 145, 0, 0.1);
-    color: var(--primary-color);
-    border-radius: 20px;
-    font-size: 0.85rem;
-    font-weight: 500;
-}
-
-.price-label {
-    vertical-align: top;
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: var(--dark-color);
-    margin-right: 2px;
-}
-
-.price-amount {
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--dark-color);
-    line-height: 1;
-}
-
-.benefit-item {
-    display: flex;
-    align-items: center;
-    margin-bottom: 8px;
-    font-size: 0.9rem;
-}
-
-.btn-membership {
-    background-color: var(--primary-color);
-    color: white;
-    border: none;
-    border-radius: 50px;
-    padding: 10px 20px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-}
-
-.btn-membership:hover {
-    background-color: #c48200;
-    color: white;
-    box-shadow: 0 5px 15px rgba(218, 145, 0, 0.3);
-}
-
-/* Success Modal */
-.success-icon-container {
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    width: 120px;
-    height: 120px;
-    border-radius: 60px;
-    background-color: rgba(25, 135, 84, 0.1);
-}
-
-/* Form Elements */
-.form-check-input:checked {
-    background-color: var(--primary-color);
-    border-color: var(--primary-color);
-}
-
-/* Active Membership Card */
-.membership-badge {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    background-color: rgba(218, 145, 0, 0.1);
-}
-
-/* Animation */
-@keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-    100% { transform: scale(1); }
-}
-
-.btn-membership:focus {
-    animation: pulse 1s infinite;
-}
-
-/* Responsive adjustments */
-@media (max-width: 576px) {
-    .price-amount { font-size: 1.5rem; }
-    .price-label { font-size: 1rem; }
-    .card-title { font-size: 1.1rem; }
-    .benefit-item { font-size: 0.8rem; }
-}
-</style>
 
 <script>
 function startPayment(typeId) {
@@ -387,6 +428,29 @@ function startPayment(typeId) {
         button.disabled = false;
         button.innerHTML = originalContent;
     });
+}
+
+document.getElementById('statusBtn').addEventListener('click', function () {
+    document.getElementById('statusSection').style.display = 'block';
+    document.getElementById('riwayatSection').style.display = 'none';
+});
+
+document.getElementById('riwayatBtn').addEventListener('click', function () {
+    document.getElementById('statusSection').style.display = 'none';
+    document.getElementById('riwayatSection').style.display = 'block';
+});
+
+function showPaymentStatusModal() {
+    $('#paymentStatusModal').modal('show');
+}
+
+function hidePaymentStatusModal() {
+    $('#paymentStatusModal').modal('hide');
+}
+
+function showSuccessModal() {
+    hidePaymentStatusModal();
+    $('#successModal').modal('show');
 }
 </script>
 

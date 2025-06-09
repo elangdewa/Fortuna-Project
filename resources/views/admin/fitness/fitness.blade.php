@@ -1,38 +1,65 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
-@section('content')
+@section('admin-content')
+<link href="{{ asset('css/tableadmin.css') }}" rel="stylesheet">
 
-<link href="{{ asset('css/member.css') }}" rel="stylesheet">
-@include('layouts.sidenavbar')
-
-<div class="container mt-5">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>Kelas Fitness</h2>
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addClassModal">
-            Tambah Kelas Baru
-        </button>
-
+<div class="container mt-5 px-0">
+    <!-- Page Header -->
+    <div class="page-header mb-4">
+        <div class="d-flex justify-content-between align-items-center px-3">
+            <h2 class="page-title">Kelas Fitness</h2>
+            <button type="button" class="btn btn-primary-custom" data-bs-toggle="modal" data-bs-target="#addClassModal">
+                <i class="fas fa-plus me-1"></i> Tambah Kelas Baru
+            </button>
+        </div>
     </div>
 
     @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
+        <div class="alert alert-success mb-3 mx-3 animate__animated animate__fadeIn">{{ session('success') }}</div>
     @endif
 
     @if(session('error'))
-        <div class="alert alert-danger">{{ session('error') }}</div>
+        <div class="alert alert-danger mb-3 mx-3 animate__animated animate__fadeIn">{{ session('error') }}</div>
     @endif
-    <!-- Table untuk menampilkan data kelas -->
-    <div class="card">
-        <div class="card-body">
+
+      <a href="{{ route('admin.export.fitness.all') }}" class="btn btn-primary">
+        <i class="bi bi-file-earmark-excel"></i> Export Semua Jadwal & Member
+    </a>
+
+    <form action="{{ route('admin.export.fitness.single') }}" method="GET">
+    <div class="mb-3">
+        <label for="class_id" class="form-label">Pilih Kelas</label>
+        <select name="class_id" id="class_id" class="form-select" required>
+            @foreach ($allClasses as $schedule)
+                <option value="{{ $schedule->id }}">
+                    {{ $schedule->fitnessClass->class_name }} - {{ \Carbon\Carbon::parse($schedule->date)->format('d M Y') }}
+                </option>
+            @endforeach
+        </select>
+    </div>
+    <button type="submit" class="btn btn-warning">
+        <i class="bi bi-download me-1"></i> Export Kelas Terpilih
+    </button>
+</form>
+</div>
+
+    <!-- Table Card -->
+    <div class="card mx-0">
+        <div class="card-header bg-dark-custom">
+            <h5 class="mb-0 text-white" style="font-size: 1rem;">
+                <i class="fas fa-table me-2"></i>Data Kelas
+            </h5>
+        </div>
+        <div class="card-body p-0">
             <div class="table-responsive">
-                <table class="table table-striped">
-                    <thead>
+                <table class="table">
+                    <thead class="table-dark-custom">
                         <tr>
-                            <th>ID</th>
-                            <th>Nama Kelas</th>
+                            <th style="width: 60px;">ID</th>
+                            <th style="width: 150px;">Nama Kelas</th>
                             <th>Deskripsi</th>
-                            <th>Kapasitas</th>
-                            <th>Aksi</th>
+                            <th style="width: 100px;">Kapasitas</th>
+                            <th class="col-aksi">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -40,40 +67,60 @@
                             @foreach($classes as $class)
                                 <tr>
                                     <td>{{ $class->id }}</td>
-                                    <td>{{ $class->class_name }}</td>
-                                    <td>{{ Str::limit($class->description, 50) }}</td>
-
+                                    <td>
+                                        <span class="text-truncate-custom" title="{{ $class->class_name }}">
+                                            {{ $class->class_name }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="text-truncate-custom" title="{{ $class->description }}">
+                                            {{ Str::limit($class->description, 50) }}
+                                        </span>
+                                    </td>
                                     <td>{{ $class->capacity }}</td>
                                     <td>
-                                        <button class="btn btn-warning btn-sm edit-btn"
-        data-id="{{ $class->id }}"
-        data-class_name="{{ $class->class_name }}"
-        data-description="{{ $class->description }}"
-        data-capacity="{{ $class->capacity }}"
-        data-bs-toggle="modal"
-        data-bs-target="#editClassModal">
-        Edit
-    </button>
-
-    <a href="{{ route('admin.fitness.schedules.index', $class->id) }}" class="btn btn-info btn-sm mt-1">
-        Kelola Jadwal
-    </a>
-
-    <a href="{{ route('admin.fitness.members', $class->id) }}" class="btn btn-primary btn-sm mt-1">
-        Lihat Member
-    </a>
-
-    <form action="{{ route('admin.fitness.destroy', $class->id) }}" method="POST">
-        @csrf
-        @method('DELETE')
-        <button type="submit" class="btn btn-danger btn-sm mt-1" onclick="return confirm('Apakah Anda yakin ingin menghapus kelas ini?')">Hapus</button>
-    </form>
-</td>
+                                        <div class="d-flex gap-1">
+                                            <button class="btn btn-warning btn-sm edit-btn"
+                                                data-id="{{ $class->id }}"
+                                                data-class_name="{{ $class->class_name }}"
+                                                data-description="{{ $class->description }}"
+                                                data-capacity="{{ $class->capacity }}"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#editClassModal">
+                                               <i class="bi bi-pencil-square"></i>
+                                            </button>
+                                            <a href="{{ route('admin.fitness.schedules.index', $class->id) }}"
+                                               class="btn btn-info btn-sm">
+                                                <i class="bi bi-calendar"></i>
+                                            </a>
+                                            {{-- <a href="{{ route('admin.fitness.members', $class->id) }}"
+                                               class="btn btn-primary-custom btn-sm">
+                                               <i class="bi bi-people"></i>
+                                            </a> --}}
+                                            <form action="{{ route('admin.fitness.destroy', $class->id) }}"
+                                                  method="POST"
+                                                  class="d-inline delete-form">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit"
+                                                        class="btn btn-danger btn-sm"
+                                                        onclick="return confirm('Apakah Anda yakin ingin menghapus kelas ini?')">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
                                 </tr>
                             @endforeach
                         @else
                             <tr>
-                                <td colspan="6" class="text-center">Tidak ada data kelas fitness</td>
+                                <td colspan="5" class="text-center py-4">
+                                    <div class="empty-state">
+                                        <i class="fas fa-dumbbell text-muted mb-2"></i>
+                                        <h5>Tidak ada kelas fitness</h5>
+                                        <p class="text-muted">Silakan tambah kelas baru</p>
+                                    </div>
+                                </td>
                             </tr>
                         @endif
                     </tbody>
@@ -81,7 +128,6 @@
             </div>
         </div>
     </div>
-
 </div>
 
 
@@ -161,7 +207,6 @@
 @push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Hanya jalankan jika ada tombol edit
         const editButtons = document.querySelectorAll('.edit-btn');
 
         if(editButtons.length > 0) {

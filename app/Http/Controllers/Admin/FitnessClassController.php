@@ -7,21 +7,18 @@ use App\Models\FitnessClass;
 use App\Models\ClassRegistration;
 use App\Models\PersonalTrainer;
 use Illuminate\Http\Request;
-
+use App\Models\ClassSchedule;
 
 
 class FitnessClassController extends Controller
 {
-    public function index()
-    {
-        $classes = FitnessClass::all();
+   public function index()
+{
+    $classes = FitnessClass::with('schedules')->get(); // Untuk tampilan daftar kelas
+    $allClasses = ClassSchedule::with('fitnessClass')->get(); // Untuk keperluan export dropdown
 
-
-        return view('admin.fitness.fitness', [
-            'classes' => $classes
-        ]);
-    }
-    // Rest of the methods remain the same
+    return view('admin.fitness.fitness', compact('classes', 'allClasses'));
+}
     public function store(Request $request)
 {
     $request->validate([
@@ -72,6 +69,18 @@ public function members(FitnessClass $class)
         ->get();
 
     return view('admin.fitness.members', compact('class', 'registrations'));
+}
+
+public function scheduleMembers(ClassSchedule $schedule)
+{
+    $registrations = $schedule->registrations()
+        ->with(['user', 'schedule.fitnessClass'])
+        ->get();
+
+    return view('admin.fitness.schedule-members', [
+        'schedule' => $schedule,
+        'registrations' => $registrations
+    ]);
 }
 
 }

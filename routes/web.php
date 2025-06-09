@@ -25,6 +25,10 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\SuperAdmin\SuperAdminController;
 use App\Http\Controllers\SuperAdmin\AdminManagementController;
 use App\Http\Controllers\SuperAdmin\SettingsController;
+use App\Http\Controllers\SuperAdmin\MemberViewController;
+use App\Http\Controllers\SuperAdmin\TrainerViewController;
+use App\Http\Controllers\SuperAdmin\FitnessViewController;
+  use App\Http\Controllers\Admin\FitnessExportController;
 
 
 
@@ -45,11 +49,12 @@ Route::view('/Fitness', 'Fitness');
 Route::view('/about', 'about');
 Route::view('/membership', 'membership');
 
-// Authentication Routes
 Auth::routes();
 Route::get('/login', [App\Http\Controllers\Auth\LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [App\Http\Controllers\Auth\LoginController::class, 'login']);
 Route::post('/logout', [App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');
+Route::get('/register', [App\Http\Controllers\Auth\RegisterController::class, 'showRegistrationForm'])->name('register');
+Route::post('/register', [App\Http\Controllers\Auth\RegisterController::class, 'register']);
 
 
 Route::middleware(['auth', 'admin', 'prevent-back'])->prefix('admin')->group(function () {
@@ -75,7 +80,7 @@ Route::middleware(['auth', 'admin', 'prevent-back'])->prefix('admin')->group(fun
 
 
     // Fitness Management
-    Route::get('/fitness', [FitnessClassController::class, 'index'])->name('admin.fitness.index');
+Route::get('/fitness', [FitnessClassController::class, 'index'])->name('admin.fitness.index');
     Route::post('/fitness/store', [FitnessClassController::class, 'store'])->name('admin.fitness.store');
     Route::put('/fitness/update/{id}', [FitnessClassController::class, 'update'])->name('admin.fitness.update');
     Route::delete('/fitness/delete/{id}', [FitnessClassController::class, 'destroy'])->name('admin.fitness.destroy');
@@ -85,8 +90,13 @@ Route::middleware(['auth', 'admin', 'prevent-back'])->prefix('admin')->group(fun
     Route::post('/fitness/{classId}/schedules', [FitnessScheduleController::class, 'store'])->name('admin.fitness.schedules.store');
     Route::put('/fitness/schedules/{scheduleId}', [FitnessScheduleController::class, 'update'])->name('admin.fitness.schedules.update');
     Route::delete('/fitness/schedules/{scheduleId}', [FitnessScheduleController::class, 'destroy'])->name('admin.fitness.schedules.destroy');
-    Route::get('/fitness/{class}/members]',[FitnessClassController::class, 'members'])
-    ->name('admin.fitness.members');
+    Route::get('/fitness/schedules/{schedule}/members', [FitnessScheduleController::class, 'scheduleMembers'])
+        ->name('admin.fitness.schedule.members');
+    Route::put('/fitness/schedule/members/{registration}/activate', [FitnessClassController::class, 'activateMember'])
+        ->name('admin.fitness.schedule.members.activate');
+    Route::put('/fitness/schedule/members/{registration}/deactivate', [FitnessClassController::class, 'deactivateMember'])
+        ->name('admin.fitness.schedule.members.deactivate');
+
     // Trainers Management
     Route::get('/trainers', [TrainerController::class, 'index'])->name('admin.trainers.index');
     Route::post('/trainers', [TrainerController::class, 'store'])->name('admin.trainers.store');
@@ -108,7 +118,7 @@ Route::middleware(['auth', 'admin', 'prevent-back'])->prefix('admin')->group(fun
 Route::middleware(['auth', 'member', 'prevent-back'])->group(function () {
    Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::get('/user/home', [HomeController::class, 'index'])->name('user.home');
-    Route::get('/user/member', [HomeController::class, 'member'])->name('user.member');
+    Route::get('/user/member', action: [HomeController::class, 'member'])->name('user.member');
 
     // User Settings
     Route::prefix('user')->middleware(['verified'])->group(function () {
@@ -138,9 +148,6 @@ Route::get('/user/home', [HomeController::class, 'index'])->name('user.home');
 });
 
 
-
-
-
 Route::middleware(['auth', 'superadmin', 'prevent-back'])->prefix('superadmin')->group(function () {
     Route::get('/', [SuperAdminController::class, 'dashboard'])->name('superadmin.dashboard');
 
@@ -154,6 +161,9 @@ Route::middleware(['auth', 'superadmin', 'prevent-back'])->prefix('superadmin')-
     'update' => 'superadmin.admins.update',
     'destroy' => 'superadmin.admins.destroy',
 ]);
+ Route::get('/members', [MemberViewController::class, 'index'])->name('superadmin.members.index');
+    Route::get('/trainers', [TrainerViewController::class, 'index'])->name('superadmin.trainers.index');
+    Route::get('/fitness', [FitnessViewController::class, 'index'])->name('superadmin.fitness.index');
 
     // System Settings
     Route::get('/settings', [SettingsController::class, 'index'])->name('superadmin.settings.index');
@@ -169,3 +179,15 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::post('/midtrans/notification', [PaymentController::class, 'notificationHandler']);
+Route::post('/admin/schedules/generate', [FitnessScheduleController::class, 'generateInstance'])->name('admin.schedules.generate');
+Route::post('/admin/generate-schedules', [FitnessScheduleController::class, 'generateInstance'])
+     ->name('admin.schedules.generate');
+
+
+Route::prefix('admin/export')->name('admin.export.')->group(function () {
+    Route::get('/memberships', [FitnessExportController::class, 'exportMemberships'])->name('memberships');
+    Route::get('/fitness/all', [FitnessExportController::class, 'exportAllClassesWithMembers'])->name('fitness.all');
+    Route::get('/fitness/class', [FitnessExportController::class, 'exportSingleClass'])->name('fitness.single');
+
+});
+Route::get('/fitness/export', [FitnessExportController::class, 'showFitnessExportPage'])->name('admin.fitness.export.page');
