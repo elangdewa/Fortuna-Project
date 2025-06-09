@@ -24,7 +24,7 @@ pipeline {
 
     stage('Migrate Test DB') {
       steps {
-        bat 'php artisan migrate --force'
+        bat 'php artisan migrate:fresh --force'
       }
     }
 
